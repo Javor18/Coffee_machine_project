@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Main{% endblock %}
+
+{% block css_block %}
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+{% endblock %}
+
+
+{% block content  %}
+    {% for drink in drinks %}
+        <div class="image">
+            {#<a href="{% url 'drinks' drink.productName %}">
+{#            <a>#}
+            <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
+            <h2>{{ drink.productName}}</h2>
+           </a>
+        </div>
+
+    {% endfor %}
+{% endblock %}
