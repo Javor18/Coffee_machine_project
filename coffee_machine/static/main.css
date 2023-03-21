@@ -30,9 +30,9 @@ body {
     margin: 3rem;
 }
 
-.image:nth-child(9){
-    margin-right: 27rem;
-}
+/*.image:nth-child(9){*/
+/*    margin-right: 27rem;*/
+/*}*/
 
 .image img {
     width: 100%;
