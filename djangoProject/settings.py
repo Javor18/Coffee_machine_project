@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-l*1!9jya2(7-+16jeik=+qyb_l+25v8h7ejtq+)-p!4j*_e=+s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['coffee-machine.onrender.com']
 
 
 # Application definition
