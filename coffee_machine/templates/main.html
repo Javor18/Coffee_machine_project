@@ -9,6 +9,13 @@
 
 
 {% block content  %}
+
+    <nav>
+    <h1 class="title">Welcome! What would you like today?</h1>
+    <div class="cart">Cart</div>
+    </nav>
+
+    <div class="container">
     {% for drink in drinks %}
         <div class="image">
             {#<a href="{% url 'drinks' drink.productName %}">
@@ -16,6 +23,7 @@
             <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
             <h2>{{ drink.productName}}</h2>
            </a>
+        </div>
         </div>
 
     {% endfor %}
