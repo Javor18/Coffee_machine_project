@@ -71,9 +71,19 @@ nav,
 
 nav {
     flex-direction: row;
-    top: 0;
+    /*top: 0;*/
     width: 100%;
     color: white;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
 }
 
-/*make gap on the last line of the container*/
+/*make the cart to be in the right side of the page*/
+
+.cart {
+    position: relative;
+    right: -6rem;
+    font-size: 35px;
+}

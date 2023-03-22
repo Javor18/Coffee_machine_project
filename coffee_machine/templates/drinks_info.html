@@ -12,32 +12,109 @@
 <body>
      {% block content %}
 
-    <section class="images">
-        <div class="image">
+{#    <section class="images">#}
+{#        <div class="image">#}
 {#            <img src="{% static 'images/' + drink.image %}" alt="drink image">#}
-            <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
-            <p>{{ drink.productName }}</p>
-        </div>
+{#            <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />#}
+{#            <p>{{ drink.productName }}</p>#}
+{#        </div>#}
+{##}
+{#        <div class="quantities">#}
+{#            <h1>Choose quantity :#}
+{#                <select name="quantity" id="quantity">#}
+{#                    <option value="1">1</option>#}
+{#                    <option value="2">2</option>#}
+{#                    <option value="3">3</option>#}
+{#                    <option value="4">4</option>#}
+{#                    <option value="5">5</option>#}
+{#                </select>#}
+{#            </h1>#}
+{##}
+{#            <h2>#}
+{#                Price :#}
+{#                <input type="number" id="price" value="{{ total.value }}$">#}
+{##}
+{#            </h2>#}
+{#        </div>#}
+{##}
+{#    </section>#}
+{##}
+{#    <script type="text/javascript">#}
+{##}
+        {#let price = {{ product.price }};#}
+{#        let quantity = document.getElementById('quantity');#}
+{#        let total = document.getElementById('price');#}
+{##}
+{#        quantity.addEventListener('change', function () {#}
+{#            total.value = ({{ price }} * quantity.value).toFixed(2);#}
+{#            console.log(`{{ total.value }}$`);#}
+{#        });#}
+{##}
+{##}
+{#    </script>#}
 
-        <div class="quantities">
-            <h1>Choose quantity :
-                <select name="quantity" id="quantity">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </h1>
+{#         <main>#}
+{#             <section class="title">#}
+{#                 <h1>Your selection</h1>#}
+{#                <h2>Cart</h2>#}
+{#             </section>#}
+{##}
+{#            <section class="main-cont">#}
+{#                    <div class="image">#}
+{#                        <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />#}
+{#                    </div>#}
+{##}
+{#                    <div class="image-cont">#}
+{#                        <h1>{{ drink.productName }}</h1>#}
+{##}
+{#                        <div class="quantities">#}
+{#                            <span class="drink-price">{{ drink.price }}</span>#}
+{##}
+{#                        </div>#}
+{#                    </div>#}
+{#            </section>#}
+{#         </main>#}
+{##}
+{##}
+{##}
 
-            <h2>
-                Price :
-                <input type="number" id="price" value="{{ total.value }}$">
+         <section class="images">
 
-            </h2>
-        </div>
+            <div class="title">
+                <h1 class="title-heading">Your selection</h1>
+                <h2>Cart</h2>
 
-    </section>
+            </div>
+
+            <div class="image">
+{#                <img src="{% static 'images/' + drink.image %}" alt="drink image">#}
+                <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
+{#              <p>{{ drink.productName }}</p>#}
+            </div>
+
+            <div class="quantities">
+                <h1 class="drink-name">{{ drink.productName }}</h1>#}
+
+                <div class="quantities">
+                    <span class="drink-price">{{ price }}</span>
+
+{#                    make a box for quantity, the quantity will be changed by the user with clicking on the plus and minus button#}
+
+                    <input type="text" name="name" value="1">
+
+                    <button class="plus-btn" type="button" name="button">
+{#                        <img src="{% static 'images/plus.svg' %}" alt="" />#}
+                        <span>+</span>
+                    </button>
+
+                    <button class="minus-btn" type="button" name="button">
+{#                        <img src="{% static 'images/minus.svg' %}" alt="" />#}
+                        <span>-</span>
+                    </button>
+                </div>
+            </div>
+
+        </section>
 
     <script type="text/javascript">
 
@@ -53,6 +130,5 @@
 
     </script>
     {% endblock %}
-
 </body>
 </html>
