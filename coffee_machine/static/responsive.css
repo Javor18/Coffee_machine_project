@@ -5,10 +5,28 @@
     }
 }
 
+@media only screen and (max-width: 1617px) {
+
+    .coffee-desc p {
+        width: 54rem;
+    }
+}
+
 @media only screen and (max-width: 1600px) {
 
     .quantities {
         width: 46%;
+    }
+
+    .coffee-desc p {
+        width: 54rem;
+    }
+}
+
+@media only screen and (max-width: 1382px) {
+
+    .coffee-desc p {
+        width: 45rem;
     }
 }
 
@@ -19,8 +37,15 @@
     }
 
     .main-pg {
-        width: 82%;
-        margin-left: 5%;
+        width: 73%;
+        margin-left: -3%;
+    }
+}
+
+@media only screen and (max-width: 1327px) {
+
+    .title-heading button {
+    right: -16rem;
     }
 }
 
@@ -31,8 +56,8 @@
     }
 
     .main-pg {
-        width: 86%;
-        margin-left: 10%;
+        width: 80%;
+        margin-left: -5%;
     }
 }
 
@@ -43,8 +68,26 @@
     }
 
     .main-pg {
-        width: 100%;
-        margin-left: 13%;
+        width: 80%;
+        margin-left: -3%;
+    }
+}
+
+@media only screen and (max-width: 1206px) {
+
+    .main-pg {
+        width: 85%;
+    }
+}
+
+@media only screen and (max-width: 1136px) {
+
+    .main-pg {
+        width: 88%;
+    }
+
+    .coffee-desc p {
+        width: 54rem;
     }
 }
 
@@ -55,106 +98,52 @@
     }
 }
 
-@media only screen and (max-width: 1108px) {
+@media only screen and (max-width: 1109px) {
 
     .main-pg {
-        width: 100%;
-        margin-left: 120px;
+        width: 89%;
+        margin-left: -16px;
     }
 }
 
 @media only screen and (max-width: 1085px) {
 
     .main-pg {
-        width: 100%;
-        margin-left: 110px;
-    }
-}
-
-@media only screen and (max-width: 1076px) {
-
-    .main-pg {
-        width: 100%;
-        margin-left: 9%;
-    }
-}
-
-@media only screen and (max-width: 1070px) {
-
-    .main-pg {
-        width: 100%;
-        margin-left: 82px;
-    }
-}
-
-@media only screen and (max-width: 1070px) {
-
-    .main-pg {
         width: 92%;
-        margin-left: 8%;
+        margin-left: -32px;
+    }
+
+    .coffee-desc p {
+        width: 50rem;
     }
 }
 
-@media only screen and (max-width: 1047px) {
+@media only screen and (max-width: 1048px) {
 
     .main-pg {
-        width: 100%;
-        margin-left: 70px;
+        width: 93%;
     }
 }
 
 @media only screen and (max-width: 1038px) {
 
     .main-pg {
-        width: 94%;
-        margin-left: 6%;
+        width: 96%;
     }
 }
 
-@media only screen and (max-width: 1027px) {
+/*@media only screen and (max-width: 1010px) {*/
 
-    .main-pg {
-        width: 95%;
-        margin-left: 55px;
-    }
-}
+/*    .main-pg {*/
+/*        width: 100%;*/
+/*        margin-left: -40px;*/
+/*    }*/
+/*}*/
 
-@media only screen and (max-width: 1021px) {
-
-    .main-pg {
-        width: 100%;
-        margin-left: 45px;
-    }
-}
-
-@media only screen and (max-width: 1010px) {
+@media only screen and (max-width: 1004px) {
 
     .main-pg {
         width: 100%;
-        margin-left: 35px;
-    }
-}
-
-@media only screen and (max-width: 1001px) {
-
-    .main-pg {
-        width: 100%;
-        margin-left: 30px;
-    }
-}
-
-@media only screen and (max-width: 997px) {
-
-    .main-pg {
-        width: 100%;
-        margin-left: 20px;
-    }
-}
-
-@media only screen and (max-width: 997px) {
-
-    .main-pg {
-        width: 100%;
-        margin-left: 0;
+        margin-left: -40px;
     }
 }
