@@ -1,0 +1,63 @@
+@media only screen and (max-width: 1700px) {
+
+    .quantities {
+        width: 41%;
+    }
+}
+
+@media only screen and (max-width: 1600px) {
+
+    .quantities {
+        width: 46%;
+    }
+}
+
+@media only screen and (max-width: 1351px) {
+
+    .quantities {
+        width: 50%;
+    }
+
+    .main-pg {
+        width: 82%;
+    }
+}
+
+@media only screen and (max-width: 1238px) {
+
+    .quantities {
+        width: 41%;
+    }
+
+    .main-pg {
+        width: 86%;
+    }
+}
+
+@media only screen and (max-width: 1238px) {
+
+    .quantities {
+        width: 45%;
+    }
+}
+
+@media only screen and (max-width: 1116px) {
+
+    .main-pg {
+        width: 89%;
+    }
+}
+
+@media only screen and (max-width: 1084px) {
+
+    .main-pg {
+        width: 95%;
+    }
+}
+
+@media only screen and (max-width: 1014px) {
+
+    .main-pg {
+        width: 100%;
+    }
+}
