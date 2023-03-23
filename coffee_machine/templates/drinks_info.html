@@ -10,6 +10,39 @@
     <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
 {#    <a href="{% url 'get_drink_info' product.product_name %}">product.product_name</a>#}
 {#    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>#}
+
+    <script type="text/javascript">
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                let cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function uuidv4() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        let device = getCookie('device');
+
+        if (device == null || device == undefined) {
+            device = uuidv4();
+        }
+        document.cookie = `device=` + device + `;domain=;path=/
+    </script>
 </head>
 <body>
      {% block content %}
@@ -91,6 +124,9 @@
 
         total.value = ({{price}} * quantityValue).toFixed(2);
 
+
+
+
         let addToCartBtn = document.querySelector('.add-to-cart-btn');
 
         addToCartBtn.addEventListener('click', function () {
@@ -98,7 +134,7 @@
             let action = this.dataset.action;
             console.log('productId:', productId, 'action:', action);
 
-            console.log('User:', user);
+            {#console.log('User:', user);#}
 
             if (user === 'AnonymousUser') {
                 console.log('User is not authenticated');
@@ -128,6 +164,7 @@
 
                 .then((data) => {
                     console.log('data:', data);
+                    location.reload();
                 });
         }
 
