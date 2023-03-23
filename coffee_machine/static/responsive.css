@@ -20,6 +20,7 @@
 
     .main-pg {
         width: 82%;
+        margin-left: 5%;
     }
 }
 
@@ -31,6 +32,7 @@
 
     .main-pg {
         width: 86%;
+        margin-left: 10%;
     }
 }
 
@@ -41,7 +43,7 @@
     }
 }
 
-@media only screen and (max-width: 1116px) {
+@media only screen and (max-width: 1118px) {
 
     .main-pg {
         width: 89%;
@@ -55,7 +57,71 @@
     }
 }
 
-@media only screen and (max-width: 1014px) {
+@media only screen and (max-width: 1076px) {
+
+    .main-pg {
+        width: 100%;
+        margin-left: 10%;
+    }
+}
+
+@media only screen and (max-width: 1070px) {
+
+    .main-pg {
+        width: 91%;
+        margin-left: 9%;
+    }
+}
+
+@media only screen and (max-width: 1070px) {
+
+    .main-pg {
+        width: 92%;
+        margin-left: 8%;
+    }
+}
+
+@media only screen and (max-width: 1045px) {
+
+    .main-pg {
+        width: 93%;
+        margin-left: 7%;
+    }
+}
+
+@media only screen and (max-width: 1038px) {
+
+    .main-pg {
+        width: 94%;
+        margin-left: 6%;
+    }
+}
+
+@media only screen and (max-width: 1027px) {
+
+    .main-pg {
+        width: 95%;
+        margin-left: 55px;
+    }
+}
+
+@media only screen and (max-width: 1020px) {
+
+    .main-pg {
+        width: 100%;
+        margin-left: 45px;
+    }
+}
+
+@media only screen and (max-width: 1010px) {
+
+    .main-pg {
+        width: 100%;
+        margin-left: 35px;
+    }
+}
+
+@media only screen and (max-width: 1001px) {
 
     .main-pg {
         width: 100%;
