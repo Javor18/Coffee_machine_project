@@ -7,12 +7,16 @@
     <link rel="stylesheet" href="{% static 'main.css' %}">
 {% endblock %}
 
+ {% block js_block %}
+        <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
+    {% endblock %}
+
 
 {% block content  %}
 
     <nav>
     <h1 class="title">Welcome! What would you like today?</h1>
-    <div class="cart">Cart</div>
+    <button class="cart"><i class="fa-solid fa-cart-shopping"></i></button>
     </nav>
 
     <div class="container">
