@@ -13,48 +13,6 @@
 </head>
 <body>
      {% block content %}
-
-{#    <section class="images">#}
-{#        <div class="image">#}
-{#            <img src="{% static 'images/' + drink.image %}" alt="drink image">#}
-{#            <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />#}
-{#            <p>{{ drink.productName }}</p>#}
-{#        </div>#}
-{##}
-{#        <div class="quantities">#}
-{#            <h1>Choose quantity :#}
-{#                <select name="quantity" id="quantity">#}
-{#                    <option value="1">1</option>#}
-{#                    <option value="2">2</option>#}
-{#                    <option value="3">3</option>#}
-{#                    <option value="4">4</option>#}
-{#                    <option value="5">5</option>#}
-{#                </select>#}
-{#            </h1>#}
-{##}
-{#            <h2>#}
-{#                Price :#}
-{#                <input type="number" id="price" value="{{ total.value }}$">#}
-{##}
-{#            </h2>#}
-{#        </div>#}
-{##}
-{#    </section>#}
-{##}
-{#    <script type="text/javascript">#}
-{##}
-        {#let price = {{ product.price }};#}
-{#        let quantity = document.getElementById('quantity');#}
-{#        let total = document.getElementById('price');#}
-{##}
-{#        quantity.addEventListener('change', function () {#}
-{#            total.value = ({{ price }} * quantity.value).toFixed(2);#}
-{#            console.log(`{{ total.value }}$`);#}
-{#        });#}
-{##}
-{##}
-{#    </script>#}
-
          <section class="images">
 
             <div class="title">
