@@ -53,31 +53,6 @@
 {##}
 {#    </script>#}
 
-{#         <main>#}
-{#             <section class="title">#}
-{#                 <h1>Your selection</h1>#}
-{#                <h2>Cart</h2>#}
-{#             </section>#}
-{##}
-{#            <section class="main-cont">#}
-{#                    <div class="image">#}
-{#                        <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />#}
-{#                    </div>#}
-{##}
-{#                    <div class="image-cont">#}
-{#                        <h1>{{ drink.productName }}</h1>#}
-{##}
-{#                        <div class="quantities">#}
-{#                            <span class="drink-price">{{ drink.price }}</span>#}
-{##}
-{#                        </div>#}
-{#                    </div>#}
-{#            </section>#}
-{#         </main>#}
-{##}
-{##}
-{##}
-
          <section class="images">
 
             <div class="title">
@@ -86,32 +61,45 @@
 
             </div>
 
-            <div class="image">
-{#                <img src="{% static 'images/' + drink.image %}" alt="drink image">#}
-                <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
-{#              <p>{{ drink.productName }}</p>#}
-            </div>
-
-            <div class="quantities">
-                <h1 class="drink-name">{{ drink.productName }}</h1>#}
+             <div class="main-pg">
+                <div class="image">
+                    <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
+                </div>
 
                 <div class="quantities">
-                    <span class="drink-price">{{ price }}</span>
+                    <h1 class="drink-name">{{ drink.productName }}</h1>#}
 
-{#                    make a box for quantity, the quantity will be changed by the user with clicking on the plus and minus button#}
+                    <div class="quantities-select">
+                        <span class="drink-price">${{ price }}</span>
 
-                    <input type="text" name="name" value="1">
+                        <input type="text" name="name" value="1">
 
-                    <button class="plus-btn" type="button" name="button">
-{#                        <img src="{% static 'images/plus.svg' %}" alt="" />#}
-                        <span>+</span>
-                    </button>
+                        <button class="plus-btn" type="button" name="button">
+                            <span>+</span>
+                        </button>
 
-                    <button class="minus-btn" type="button" name="button">
-{#                        <img src="{% static 'images/minus.svg' %}" alt="" />#}
-                        <span>-</span>
-                    </button>
+                        <button class="minus-btn" type="button" name="button">
+                            <span>-</span>
+                        </button>
+                    </div>
+
+                    <div class="total-price">
+                        <span class="total-price-text">Total:</span>
+{#                        <span class="total-price-value">{{ total.value }}</span>#}
+                        <input class="tot-price" type="number" id="price" value="{{ total.value }}$">
+                    </div>
+
+                    <div class="add-to-cart">
+                        <button class="pay-now-btn" type="button" name="button">Pay Now</button>
+                        <button class="add-to-cart-btn" type="button" name="button">Add to cart</button>
+                    </div>
                 </div>
+            </div>
+
+            <div class="coffee-desc">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
             </div>
 
         </section>
