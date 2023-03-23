@@ -41,6 +41,11 @@
     .quantities {
         width: 45%;
     }
+
+    .main-pg {
+        width: 100%;
+        margin-left: 13%;
+    }
 }
 
 @media only screen and (max-width: 1118px) {
@@ -50,10 +55,19 @@
     }
 }
 
-@media only screen and (max-width: 1084px) {
+@media only screen and (max-width: 1108px) {
 
     .main-pg {
-        width: 95%;
+        width: 100%;
+        margin-left: 120px;
+    }
+}
+
+@media only screen and (max-width: 1085px) {
+
+    .main-pg {
+        width: 100%;
+        margin-left: 110px;
     }
 }
 
@@ -61,15 +75,15 @@
 
     .main-pg {
         width: 100%;
-        margin-left: 10%;
+        margin-left: 9%;
     }
 }
 
 @media only screen and (max-width: 1070px) {
 
     .main-pg {
-        width: 91%;
-        margin-left: 9%;
+        width: 100%;
+        margin-left: 82px;
     }
 }
 
@@ -81,11 +95,11 @@
     }
 }
 
-@media only screen and (max-width: 1045px) {
+@media only screen and (max-width: 1047px) {
 
     .main-pg {
-        width: 93%;
-        margin-left: 7%;
+        width: 100%;
+        margin-left: 70px;
     }
 }
 
@@ -105,7 +119,7 @@
     }
 }
 
-@media only screen and (max-width: 1020px) {
+@media only screen and (max-width: 1021px) {
 
     .main-pg {
         width: 100%;
@@ -125,5 +139,22 @@
 
     .main-pg {
         width: 100%;
+        margin-left: 30px;
+    }
+}
+
+@media only screen and (max-width: 997px) {
+
+    .main-pg {
+        width: 100%;
+        margin-left: 20px;
+    }
+}
+
+@media only screen and (max-width: 997px) {
+
+    .main-pg {
+        width: 100%;
+        margin-left: 0;
     }
 }
