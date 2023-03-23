@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% url 'get_drink_info' product.product_name %}">>
     <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
 {#    <a href="{% url 'get_drink_info' product.product_name %}">product.product_name</a>#}
-    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>#}
 </head>
 <body>
      {% block content %}
@@ -46,7 +46,7 @@
 
                     <div class="add-to-cart">
                         <button class="pay-now-btn" type="button" name="button">Pay Now</button>
-                        <button data-product="{{ drink.id }}" data-action="add" class="add-to-cart-btn update-cart"
+                        <button data-product="{{ drink.id }}" data-action="add" class="add-to-cart-btn"
                                 type="button" name="button">Add to cart</button>
                     </div>
                 </div>
@@ -61,8 +61,6 @@
         </section>
 
     <script type="text/javascript">
-
-    {#make javascript code for the quantity. Its value should be 1 by default and it must be able to increase and decrease by 1 when the user clicks on the plus and minus buttons. The total price should be updated accordingly.#}
 
         let quantity = document.querySelector('.quantities-select input');
         let plusBtn = document.querySelector('.plus-btn');
@@ -92,6 +90,46 @@
         });
 
         total.value = ({{price}} * quantityValue).toFixed(2);
+
+        let addToCartBtn = document.querySelector('.add-to-cart-btn');
+
+        addToCartBtn.addEventListener('click', function () {
+            let productId = this.dataset.product;
+            let action = this.dataset.action;
+            console.log('productId:', productId, 'action:', action);
+
+            console.log('User:', user);
+
+            if (user === 'AnonymousUser') {
+                console.log('User is not authenticated');
+            } else {
+                addToCart(productId, action);
+            }
+
+        });
+
+        function addToCart(productId, action) {
+            console.log('User is authenticated, sending data...');
+
+            let url = '/update_item/';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'productId': productId, 'action': action})
+            })
+
+                .then((response) => {
+                    return response.json();
+                })
+
+                .then((data) => {
+                    console.log('data:', data);
+                });
+        }
 
     </script>
     {% endblock %}
