@@ -7,6 +7,7 @@
     {% load static %}
 {#    <link rel="stylesheet" href="{% static 'LeafTea.css' %}">#}
     <link rel="stylesheet" href="{% url 'get_drink_info' product.product_name %}">>
+    <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
 {#    <a href="{% url 'get_drink_info' product.product_name %}">product.product_name</a>#}
 </head>
 <body>
@@ -56,8 +57,7 @@
          <section class="images">
 
             <div class="title">
-                <h1 class="title-heading">Your selection</h1>
-                <h2>Cart</h2>
+                <h1 class="title-heading">Your selection <span><i class="fa-solid fa-cart-shopping"></i></span></h1>
 
             </div>
 
@@ -75,11 +75,11 @@
                         <input type="text" name="name" value="1">
 
                         <button class="plus-btn" type="button" name="button">
-                            <span>+</span>
+                           +
                         </button>
 
                         <button class="minus-btn" type="button" name="button">
-                            <span>-</span>
+                            -
                         </button>
                     </div>
 
