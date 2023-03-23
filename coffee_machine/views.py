@@ -5,7 +5,7 @@ import json
 import datetime
 
 from .models import *
-from .utils import cookieCart, cartData, guestOrder
+# from .utils import cookieCart, cartData, guestOrder
 
 # Create your views here.
 
@@ -49,6 +49,10 @@ def drinks(request, name):
 #
 #     context = {'product': product}
 #     return render(request, 'product.html', context)
+
+
+
+
 
 def store(request):
 
