@@ -232,9 +232,19 @@ input{
     margin-left: 8rem;
 }
 
-.title-heading span{
+/*.title-heading span{*/
+/*    position: relative;*/
+/*    right: -24rem;*/
+/*}*/
+
+.title-heading button {
+    cursor: pointer;
+    border: none;
+    background: none;
     position: relative;
     right: -24rem;
+    font-size: 3rem;
+    color: white;
 }
 
 .coffee-desc p {
