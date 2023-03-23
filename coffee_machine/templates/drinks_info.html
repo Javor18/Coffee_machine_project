@@ -72,21 +72,17 @@
                     <div class="quantities-select">
                         <span class="drink-price">${{ price }}</span>
 
-                        <input type="text" name="name" value="1">
+                        <input type="text" name="name" value="{{ quantity }}">
 
-                        <button class="plus-btn" type="button" name="button">
-                           +
-                        </button>
+                        <button class="plus-btn" type="button" name="button">+</button>
 
-                        <button class="minus-btn" type="button" name="button">
-                            -
-                        </button>
+                        <button class="minus-btn" type="button" name="button">-</button>
                     </div>
 
                     <div class="total-price">
                         <span class="total-price-text">Total:</span>
 {#                        <span class="total-price-value">{{ total.value }}</span>#}
-                        <input class="tot-price" type="number" id="price" value="{{ total.value }}$">
+                        <input class="tot-price" type="number" id="price" value="{{ total.value }}"><span>$</span>
                     </div>
 
                     <div class="add-to-cart">
@@ -106,15 +102,36 @@
 
     <script type="text/javascript">
 
-        {#let price = {{ product.price }};#}
-        let quantity = document.getElementById('quantity');
-        let total = document.getElementById('price');
+    {#make javascript code for the quantity. Its value should be 1 by default and it must be able to increase and decrease by 1 when the user clicks on the plus and minus buttons. The total price should be updated accordingly.#}
 
-        quantity.addEventListener('change', function () {
-            total.value = ({{ price }} * quantity.value).toFixed(2);
-            console.log(`{{ total.value }}$`);
+        let quantity = document.querySelector('.quantities-select input');
+        let plusBtn = document.querySelector('.plus-btn');
+        let minusBtn = document.querySelector('.minus-btn');
+        let drink_price = {{ price }};
+        let total = document.querySelector('.tot-price');
+        let quantityValue = 1;
+        let priceValue = 5.99;
+
+        plusBtn.addEventListener('click', function () {
+            quantityValue++;
+            quantity.value = quantityValue;
+            total.value = ({{ price }} * quantityValue).toFixed(2);
         });
 
+        minusBtn.addEventListener('click', function () {
+            if (quantityValue > 1) {
+                quantityValue--;
+                quantity.value = quantityValue;
+                {#total.value = (priceValue * quantityValue).toFixed(2);#}
+                total.value = ({{price}} * quantityValue).toFixed(2);
+            }
+        });
+
+        quantity.addEventListener('change', function () {
+            total.value = ({{price}} * quantity.value).toFixed(2);
+        });
+
+        total.value = ({{price}} * quantityValue).toFixed(2);
 
     </script>
     {% endblock %}
