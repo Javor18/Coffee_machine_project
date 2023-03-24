@@ -18,7 +18,7 @@
     <button class="cart"><i class="fa-solid fa-cart-shopping"></i></button>
     </nav>
 
-    <div class="container">
+{#    <div class="container">#}
     {% for drink in drinks %}
         <div class="image">
             {#<a href="{% url 'drinks' drink.productName %}">
@@ -27,7 +27,7 @@
             <h2>{{ drink.productName}}</h2>
            </a>
         </div>
-        </div>
+{#        </div>#}
 
     {% endfor %}
 {% endblock %}
