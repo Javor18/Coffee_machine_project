@@ -31,9 +31,8 @@ body {
 }
 
 .image:hover {
-    /*transition-delay: 250ms;*/
-    /*transform-style: flat;*/
-     box-shadow: 0 0 25px 11px blue;
+    transition-duration: 0.45s;
+     box-shadow: 0 0 13px 9px blue;
 }
 
 /*.image:nth-child(9){*/
