@@ -89,7 +89,22 @@
                     </div>
 
                     <div class="add-to-cart">
-                        <button class="pay-now-btn" type="button" name="button">Pay Now</button>
+                        <button id="show-img-btn" class="pay-now-btn" type="button" name="button">Pay Now</button>
+                        <div id="img-overlay">
+                            <img src="{% static 'images/card-payment.png' %}" alt="">
+                        </div>
+
+                        <div id="img-overlay-1">
+                            <h1>Please collect your order</h1>
+                            <img src="{% static 'images/checked.png' %}">
+                        </div>
+
+                        <div id="loading-dots">
+                            <h1>Loading</h1>
+                            <div class="dots">
+                            <h1 class="dot one">.</h1><h1 class="dot two">.</h1><h1 class="dot three">.</h1>
+                            </div>
+                            </div>
                         <button data-action="add" class="add-to-cart-btn" type="button" onclick="addToCart()">Add to cart</button>
                     </div>
                 </div>
@@ -151,6 +166,43 @@
 
          </script>
 
+
+         {#//////// Show Images //////////#}
+
+
+         <script>
+
+         const showImageBtn = document.getElementById('show-img-btn');
+         const imageOverlay = document.getElementById('img-overlay');
+         const imageOverlay1 = document.getElementById('img-overlay-1')
+         const LoadDots = document.getElementById('loading-dots')
+
+        showImageBtn.addEventListener('click', function() {
+            imageOverlay.style.display = 'block';
+        });
+
+        imageOverlay.addEventListener('click', function() {
+            LoadDots.style.display = 'block';
+            imageOverlay.style.display = 'none';
+        });
+
+        LoadDots.addEventListener('click', function (){
+            imageOverlay1.style.display = 'block';
+            LoadDots.style.display = 'none';
+            imageOverlay.style.display = 'none';
+        })
+
+         imageOverlay1.addEventListener('click', function (){
+             imageOverlay1.style.display = 'none'
+         })
+
+        setTimeout(function() {
+            let image = document.getElementById('img-overlay');
+            image.setAttribute('src', '{% static 'images/checked.png' %}');
+            image.setAttribute('alt', 'New Image');
+    }, 5000); // Replace the image after 5 seconds (5000 milliseconds)
+
+         </script>
     {% endblock %}
 </body>
 </html>
