@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from coffee_machine import views
+from coffee_machine.views import add_to_cart, remove_from_cart, cart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main, name='main'),
     path('drinks/<str:name>', views.drinks, name='drinks'),
-    path('update_item/', views.updateItem, name='update_item'),
+    path('cart/', cart, name='cart'),
 ]

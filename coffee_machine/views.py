@@ -22,94 +22,6 @@ def drinks(request, name):
     return render(request, 'drinks_info.html', context)
 
 
-# ///////////// Add to cart //////////////////
-
-
-# def product(request, pk):
-#     product = CoffeMachine.objects.get(id=pk)
-#
-#     # Get user informaton
-#
-#     if request.method == 'POST':
-#         product = CoffeMachine.objects.get(id=pk)
-#
-#         try:
-#             customer = request.user.customer
-#
-#         except:
-#             device = request.COOKIES['device']
-#             customer, created = Customer.objects.get_or_create(device=device)
-#
-#         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-#         orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-#         orderItem.quantity = request.POST('quantity')
-#         orderItem.save()
-#
-#         return redirect('cart')
-#
-#     context = {'product': product}
-#     return render(request, 'product.html', context)
-
-
-
-
-
-# def store(request):
-#
-#     data = cartData(request)
-#     cartItems = data['cartItems']
-#
-#     products = CoffeMachine.objects.all()
-#     context = {'products': products, 'cartItems': cartItems}
-#     return render(request, 'store.html', context)
-#
-# def cart(request):
-#
-#     data = cartData(request)
-#     cartItems = data['cartItems']
-#     order = data['order']
-#     items = data['items']
-#
-#     context = {'items': items, 'order': order, 'cartItems': cartItems}
-#     return render(request, 'cart.html', context)
-#
-# def checkout(request):
-#
-#     data = cookieCart(request)
-#     cartItems = data['cartItems']
-#     order = data['order']
-#     items = data['items']
-#
-#     context = {'items': items, 'order': order, 'cartItems': cartItems}
-#     return render(request, 'checkout.html', context)
-#
-# def updateItem(request):
-#     data = json.loads(request.data)
-#     productId = data['productId']
-#     action = data['action']
-#
-#     print('Action:', action)
-#     print('productId:', productId)
-#
-#     customer = request.user.customer
-#     product = CoffeMachine.objects.get(id=productId)
-#     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-#
-#     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-#
-#     if action == 'add':
-#         orderItem.quantity = (orderItem.quantity + 1)
-#     elif action == 'remove':
-#         orderItem.quantity = (orderItem.quantity - 1)
-#
-#     orderItem.save()
-#
-#     if orderItem.quantity <= 0:
-#         orderItem.delete()
-#
-#     return JsonResponse('Item was added', safe=False)
-
-
 # /////////////  View for adding items to the cart  //////////////
 
 def add_to_cart(request, drink_id):
@@ -152,3 +64,11 @@ def remove_from_cart(request, drink_id):
         del cart[drink_id]
         request.session['cart'] = cart
     return redirect('cart')
+
+# /////////////  View for checkout  //////////////
+
+def cart(request):
+
+    cart_items = CartItem.objects.all()
+    total = sum([item.total for item in cart_items])
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total})
