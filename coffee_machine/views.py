@@ -26,17 +26,26 @@ def drinks(request, name):
 
 def add_to_cart(request, drink_id):
 
-    drink = CoffeMachine.objects.get(id=drink_id)
-    cart = request.session.get('cart', {})
-    cart[drink_id] = {
-        'name': drink_id.productName,
-        'price': drink_id.price_with_profit,
-        'quantity': cart.get(drink_id, {}).get('quantity', 0) + 1
-    }
+    # drink = CoffeMachine.objects.get(id=drink_id)
+    # cart = request.session.get('cart', {})
+    # cart[drink_id] = {
+    #     'name': drink_id.productName,
+    #     'price': drink_id.price_with_profit,
+    #     'quantity': cart.get(drink_id, {}).get('quantity', 0) + 1
+    # }
+    #
+    # request.session['cart'] = cart
+    # return redirect('cart')
 
-    request.session['cart'] = cart
-    return redirect('cart')
+    if request.method == 'POST':
+        user = request.user
+        drink_name = request.POST.get('drink_name')
+        drink_price = request.POST.get('drink_price')
+        quantity = request.POST.get('quantity')
+        cart_item = Cart(user=user, drink_name=drink_name, drink_price=drink_price, quantity=quantity)
+        cart_item.save()
 
+        return redirect('cart')
 
 # /////////////  View for displaying items in the cart  //////////////
 def view_cart(request):
@@ -65,10 +74,10 @@ def remove_from_cart(request, drink_id):
         request.session['cart'] = cart
     return redirect('cart')
 
-# /////////////  View for checkout  //////////////
+# /////////////  View for cart  //////////////
 
 def cart(request):
 
-    cart_items = CartItem.objects.all()
-    total = sum([item.total for item in cart_items])
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total})
+    cart_item = Cart.objects.filter(user=request.user)
+    context = {'cart_item': cart_item}
+    return render(request, 'cart.html', context)
