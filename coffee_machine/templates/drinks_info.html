@@ -11,56 +11,57 @@
 {#    <a href="{% url 'get_drink_info' product.product_name %}">product.product_name</a>#}
 {#    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>#}
 
-    <script type="text/javascript">
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                let cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    let cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
-
-        function getCookie(name){
-            var cookieArr = document.cookie.split(";");
-
-            for(var i = 0; i < cookieArr.length; i++){
-
-                var cookiePair = cookieArr[i].split("=");
-
-                if(name == cookiePair[0].trim()){
-                    return decodeURIComponent(cookiePair[1]);
-                }
-            }
-            return null;
-        }
-
-        var cart = JSON.parse(getCookie('cart'));
-        if (cart === undefined) {
-            cart = {}
-            console.log('cart is empty')
-            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
-        }
-
-    </script>
+{#    <script type="text/javascript">#}
+{##}
+{#        function getCookie(name) {#}
+{#            let cookieValue = null;#}
+{#            if (document.cookie && document.cookie !== '') {#}
+{#                let cookies = document.cookie.split(';');#}
+{#                for (let i = 0; i < cookies.length; i++) {#}
+{#                    let cookie = cookies[i].trim();#}
+{#                    // Does this cookie string begin with the name we want?#}
+{#                    if (cookie.substring(0, name.length + 1) === (name + '=')) {#}
+{#                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));#}
+{#                        break;#}
+{#                    }#}
+{#                }#}
+{#            }#}
+{#            return cookieValue;#}
+{#        }#}
+{#        var csrftoken = getCookie('csrftoken');#}
+{##}
+{#        function getCookie(name){#}
+{#            var cookieArr = document.cookie.split(";");#}
+{##}
+{#            for(var i = 0; i < cookieArr.length; i++){#}
+{##}
+{#                var cookiePair = cookieArr[i].split("=");#}
+{##}
+{#                if(name == cookiePair[0].trim()){#}
+{#                    return decodeURIComponent(cookiePair[1]);#}
+{#                }#}
+{#            }#}
+{#            return null;#}
+{#        }#}
+{##}
+{#        var cart = JSON.parse(getCookie('cart'));#}
+{#        if (cart === undefined) {#}
+{#            cart = {}#}
+{#            console.log('cart is empty')#}
+{#            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"#}
+{#        }#}
+{##}
+{#    </script>#}
 </head>
 <body>
      {% block content %}
          <section class="images">
 
-            <div class="title">
-                <h1 class="title-heading">Your selection <button class="cart"><i class="fa-solid fa-cart-shopping"></i></button></h1>
+            <nav class="title">
+                <h1 class="title-heading">Your selection</h1>
+                <a href="{% url 'cart' %}"><button class="cart"><i class="fa-solid fa-cart-shopping"></i></button></a>
 
-            </div>
+            </nav>
 
              <div class="main-pg">
                 <div class="image">
