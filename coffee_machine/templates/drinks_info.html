@@ -73,7 +73,7 @@
                     <div class="quantities-select">
                         <span class="drink-price">${{ price }}</span>
 
-                        <input type="text" name="name" value="1">
+                        <input type="text" name="name" value="1" readonly>
 
                         <button class="plus-btn" type="button" name="button">+</button>
 
@@ -83,7 +83,7 @@
                     <div class="total-price">
                         <span class="total-price-text">Total:</span>
 {#                        <span class="total-price-value">{{ total.value }}</span>#}
-                        <input class="tot-price" type="number" id="price" value="{{ total.value }}"><span>$</span>
+                        <input class="tot-price" type="number" id="price" value="{{ total.value }}" disabled><span>$</span>
                     </div>
 
                     <div class="add-to-cart">
