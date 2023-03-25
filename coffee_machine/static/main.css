@@ -43,9 +43,8 @@ body {
     width: 100%;
     height: 250px;
     object-fit: cover;
-    border-top-left-radius: 17px;
-    border-top-right-radius: 17px;
-    margin-top: -1rem;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 }
 
 .image h2 {
@@ -85,7 +84,6 @@ nav {
     font-size: 21px;
 }
 
-/*make the cart to be in the right side of the page*/
 
 .cart {
     position: relative;

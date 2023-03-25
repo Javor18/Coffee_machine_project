@@ -15,13 +15,13 @@
 
     <nav>
     <h1 class="title">Welcome! What would you like today?</h1>
-    <button class="cart"><i class="fa-solid fa-cart-shopping"></i></button>
+    <a href="cart"><button class="cart"><i class="fa-solid fa-cart-shopping"></i></button></a>
     </nav>
 
 {#    <div class="container">#}
     {% for drink in drinks %}
         <div class="image">
-            {#<a href="{% url 'drinks' drink.productName %}">
+            <a href="{% url 'drinks' drink.productName %}">
 {#            <a>#}
             <img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" />
             <h2>{{ drink.productName}}</h2>
