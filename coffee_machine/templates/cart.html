@@ -1,54 +1,10 @@
 {#{% extends 'base.html' %}#}
-{##}
-{#{% load static %}#}
-{##}
-{#{% block content %}#}
-{##}
-{#    {% if coffee_machine_cartitem != None %}#}
-{##}
-{#    <h1>Cart</h1>#}
-{#    <table>#}
-{#    <thead>#}
-{#    <tr>#}
-{#            <th>Drink</th>#}
-{#            <th>Quantity</th>#}
-{#            <th>Price</th>#}
-{#            <th>Total</th>#}
-{#            <th>Update</th>#}
-{#            <th>Remove</th>#}
-{#        </tr>#}
-{#    </thead>#}
-{##}
-{#    <tbody>#}
-{##}
-{#        {% for drink in cart_items %}#}
-{##}
-{#        <tr>#}
-{#            <td>{{ drink.drink_name }}</td>#}
-{#            <td>{{ drink.quantity }}</td>#}
-{#            <td>{{ drink.drink_price }}</td>#}
-{#            <td>{{ drink.drink_price * drink.quantity }}</td>#}
-{#            <td><a href="{% url 'update_cart' drink.id %}">Update</a></td>#}
-{#            <td><a href="{% url 'remove_from_cart' drink.id %}">Remove</a></td>#}
-{#        </tr>#}
-{#        {% endfor %}#}
-{##}
-{#        <tr>#}
-{#            <td colspan="3">Total</td>#}
-{#            <td>{{ total }}</td>#}
-{#    </tbody>#}
-{#    </table>#}
-{##}
-{#    {% endif %}#}
-{#{% endblock %}#}
-
-
-
-{#{% extends 'base.html' %}#}
 {% load static %}
 {#<link rel="stylesheet" href="{% static 'cart.css' %}">#}
-<link rel="stylesheet" href="{% static 'cart.css' %}
-
+{% block css_block %}
+    <link rel="stylesheet" href="{% static 'cart.css' %}">
+{% endblock %}
+{#<link rel="stylesheet" href="{% static 'cart.css' %}#}
 <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
 {% block content %}
 	<div class="row">
@@ -61,8 +17,8 @@
 				<br>
 				<table class="table">
 					<tr>
-						<th><h5>Items: <strong>3</strong></h5></th>
-						<th><h5>Total:<strong> $42</strong></h5></th>
+                        <th><h5>Items: <strong>{{ order.get_cart_items }}</strong></h5></th>
+						<th><h5>Total:<strong>${{order.get_cart_total|floatformat:2}}</strong></h5></th>
 						<th>
 {#							<a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>#}
                             <button style="float:right; margin:5px;" class="btn btn-success">Pay Now</button>
@@ -81,12 +37,13 @@
 					<div style="flex:1"><strong>Quantity</strong></div>
 					<div style="flex:1"><strong>Total</strong></div>
 				</div>
+
 				{% for item in items %}
 				<div class="cart-row">
 {#					<div style="flex:2"><<img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" alt="Drink Image" /></div>#}
-                    <div style="flex:2"><img src="{% static 'images/'|add:item.product.productName|add:'.jpg' %}" alt="Drink Image" /></div>
-					<div style="flex:2"><p>{{item.product.name}}</p></div>
-					<div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
+                    <div style="flex:2"><img class="row-image" src="{% static 'images/'|add:item.product.productName|add:'.jpg' %}" alt="Drink Image" /></div>
+                    <div style="flex:2"><p>{{item.product.productName}}</p></div>
+                    <div style="flex:1"><p>${{item.product.price_with_profit|floatformat:2}}</p></div>
 					<div style="flex:1">
 						<p class="quantity">{{item.quantity}}</p>
 						<div class="quantity">
@@ -100,7 +57,7 @@
                             </div>
 						</div>
 					</div>
-					<div style="flex:1"><p>$32</p></div>
+                    <div style="flex:1"><p>${{item.get_total|floatformat:2}}</p></div>
 				</div>
 				{% endfor %}
 			</div>
