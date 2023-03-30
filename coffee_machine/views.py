@@ -27,7 +27,7 @@ def main(request):
 
     drinks = CoffeMachine.objects.all()
     context = {'drinks': drinks, 'cartItems': cartItems}
-    return render(request, 'main.html', {"drinks": drinks})
+    return render(request, 'main.html', context)
 
 
 def drinks(request, name):
@@ -46,6 +46,7 @@ def drinks(request, name):
         order = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems = order['get_cart_items']
 
+    # drink = CoffeMachine.objects.get(productName=name)
     drink = CoffeMachine.objects.get(productName=name)
     price = drink.price_with_profit
     name = drink.productName
@@ -154,8 +155,9 @@ def updateItem(request):
     print('Product:', drinkId)
 
     customer = request.user.customer
-    drink = CoffeMachine.objects.get(id=drinkId)
+    drink = Drinks.objects.get(id=drinkId)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
     orderItem, created = OrderItem.objects.get_or_create(order=order, drink=drink)
 
     if action == 'add':
@@ -169,33 +171,13 @@ def updateItem(request):
         orderItem.delete()
 
 
-# def store(request):
-#
-#     if request.user.is_authenticated:
-#         customer = request.user.customer
-#         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-#         items = order.orderitem_set.all()
-#         cartItems = order.get_cart_items
-#
-#     else:
-#
-#         # Create empty cart for now for non-logged in user
-#
-#         items = []
-#         order = {'get_cart_total': 0, 'get_cart_items': 0}
-#         cartItems = order['get_cart_items']
-#
-#     drinks = CoffeMachine.objects.all()
-#     context = {'drinks': drinks, 'cartItems': cartItems}
-#     return render(request, 'store.html', context)
-
-
 def cart(request):
 
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
+        # cartItems = order.get_cart_items
 
     else:
         items = []

@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main, name='main'),
     path('drinks/<str:name>', views.drinks, name='drinks'),
-    # path('cart/', cart, name='cart'),
-    path('update_item/', views.updateItem, name='update_item'),
     path('cart/', views.cart, name='cart'),
+    # path('checkout/', views.checkout, name='checkout'),
+    path('update_item/', views.updateItem, name='update_item'),
 ]

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from coffee_machine.models import CoffeMachine
 from coffee_machine.models import *
 
 class CoffeMachineAdmin(admin.ModelAdmin):
