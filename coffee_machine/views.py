@@ -53,19 +53,19 @@ def drinks(request, name):
     context = {'price': price, 'name': name, 'drink': drink}
     return render(request, 'drinks_info.html', context)
 
+
 def updateItem(request):
 
     data = json.loads(request.body)
-    drinkId = data['drinkId']
+    drink = data['drink']
     action = data['action']
     print('Action:', action)
-    print('Product:', drinkId)
+    print('Product:', drink)
 
     customer = request.user.customer
-    drink = Drinks.objects.get(id=drinkId)
+    drink = CoffeMachine.objects.get(productName=drink)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
-    orderItem, created = OrderItem.objects.get_or_create(order=order, drink=drink)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
@@ -77,6 +77,7 @@ def updateItem(request):
     if orderItem.quantity <= 0:
         orderItem.delete()
 
+    return JsonResponse('Item was added', safe=False)
 
 def cart(request):
 
