@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
 
@@ -53,31 +54,36 @@ def drinks(request, name):
     context = {'price': price, 'name': name, 'drink': drink}
     return render(request, 'drinks_info.html', context)
 
-
+@csrf_exempt
 def updateItem(request):
+    print("UpdateItem")
+    print(request.body)
+    if request.method == "POST":
+        print(request)
+        data = json.loads(request.body)
+        print(data)
 
-    data = json.loads(request.body)
-    drink = data['drink']
-    action = data['action']
-    print('Action:', action)
-    print('Product:', drink)
+        drink = data['productId']
+        action = data['action']
+        print('Action:', action)
+        print('Product:', drink)
 
-    customer = request.user.customer
-    drink = CoffeMachine.objects.get(productName=drink)
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
+        customer = request.user.customer
+        drink = CoffeMachine.objects.get(id=int(drink))
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
-    if action == 'add':
-        orderItem.quantity = (orderItem.quantity + 1)
-    elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
+        if action == 'add':
+            orderItem.quantity = (orderItem.quantity + 1)
+        elif action == 'remove':
+            orderItem.quantity = (orderItem.quantity - 1)
 
-    orderItem.save()
+        orderItem.save()
 
-    if orderItem.quantity <= 0:
-        orderItem.delete()
+        if orderItem.quantity <= 0:
+            orderItem.delete()
 
-    return JsonResponse('Item was added', safe=False)
+    return JsonResponse({"message": "ok"})
 
 def cart(request):
 

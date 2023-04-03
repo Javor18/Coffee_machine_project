@@ -6,46 +6,11 @@
     <title>{{ drink.productName }}</title>
     {% load static %}
 {#    <link rel="stylesheet" href="{% static 'LeafTea.css' %}">#}
+{#    <link rel="stylesheet" href="{% static 'js/cart.js' %}#}
     <link rel="stylesheet" href="{% url 'get_drink_info' product.product_name %}">
     <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-{#    <a href="{% url 'get_drink_info' product.product_name %}">product.product_name</a>#}
-{#    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>#}
-
-{#<script type="text/javascript">#}
-{##}
-{#             var user = '{{request.user}}'#}
-{##}
-{#             function getToken(name) {#}
-{##}
-{#                 var cookieValue = null;#}
-{##}
-{#                 if (document.cookie && document.cookie !== '') {#}
-{##}
-{#                     var cookies = document.cookie.split(';');#}
-{##}
-{#                     for (var i = 0; i < cookies.length; i++) {#}
-{##}
-{#                         var cookie = cookies[i].trim();#}
-{##}
-{#                         // Does this cookie string begin with the name we want?#}
-{##}
-{#                         if (cookie.substring(0, name.length + 1) === (name + '=')) {#}
-{##}
-{#                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));#}
-{##}
-{#                             break;#}
-{#                         }#}
-{#                     }#}
-{#                 }#}
-{#                 return cookieValue;#}
-{#             }#}
-{#             var csrftoken = getToken('csrftoken')#}
-{##}
-{#         </script>#}
-
-    <script type="text/javascript">
-
+   <script type="text/javascript">
         let user = '{{request.user}}'
 
     </script>
@@ -234,7 +199,7 @@
                     method:'POST',
                     headers:{
                         'Content-Type':'application/json',
-                        'X-CSRFToken':csrftoken,
+                        {#'X-CSRFToken':csrftoken,#}
                     },
                     body:JSON.stringify({'productId':productId, 'action':action})
                 })
