@@ -165,16 +165,14 @@ input{
     cursor: pointer;
 }
 
-/*make the title on top of the page*/
 
 .title{
-    position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-left: 19rem;
+    margin-left: 17rem;
 }
 
 .main-pg{

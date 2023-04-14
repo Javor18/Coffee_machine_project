@@ -41,7 +41,7 @@
                     <div class="quantities-select">
                         <span class="drink-price">${{ price }}</span>
 
-                        <input type="text" name="name" value="1" readonly>
+                        <input id="quantity" type="text" name="name" value="1" readonly>
 
                         <button class="plus-btn" type="button" name="button">+</button>
 
@@ -177,7 +177,8 @@
                 updateBtns[i].addEventListener('click', function (){
                     let productId = this.dataset.product
                     let action = this.dataset.action
-                    console.log('productId:', productId, 'Action:', action)
+                    let quantity = document.getElementById('quantity').value
+                    console.log('productId:', productId, 'Action:', action, 'Quantity:', quantity)
 
 
                     console.log('User:', user)
@@ -185,12 +186,12 @@
                     if (user == 'AnonymousUser'){
                         console.log('Not logged in')
                     }else{
-                        updateUserOrder(productId, action)
+                        updateUserOrder(productId, action, quantity)
                     }
                 })
             }
 
-            function updateUserOrder(productId, action){
+            function updateUserOrder(productId, action, quantity){
                 console.log('User is logged in, sending data...')
 
                 let url = '/update_item/'
@@ -201,7 +202,7 @@
                         'Content-Type':'application/json',
                         {#'X-CSRFToken':csrftoken,#}
                     },
-                    body:JSON.stringify({'productId':productId, 'action':action})
+                    body:JSON.stringify({'productId':productId, 'action':action, 'quantity':quantity})
                 })
 
                 .then((response) => {

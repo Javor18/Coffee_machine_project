@@ -65,18 +65,28 @@ def updateItem(request):
 
         drink = data['productId']
         action = data['action']
+        quantity = data['quantity']
         print('Action:', action)
         print('Product:', drink)
+        print('Quantity:', data['quantity'])
 
         customer = request.user.customer
         drink = CoffeMachine.objects.get(id=int(drink))
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
+
         if action == 'add':
-            orderItem.quantity = (orderItem.quantity + 1)
+            orderItem.quantity = (orderItem.quantity + int(quantity))
+
         elif action == 'remove':
             orderItem.quantity = (orderItem.quantity - 1)
+
+        elif action == 'plus':
+            orderItem.quantity = (orderItem.quantity + 1)
+
+        elif action == 'delete':
+            orderItem.quantity = 0
 
         orderItem.save()
 
