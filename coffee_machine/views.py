@@ -97,16 +97,54 @@ def updateItem(request):
 
 def cart(request):
 
+    # if request.user.is_authenticated:
+    #     customer = request.user.customer
+    #     order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    #     items = order.orderitem_set.all()
+    #     cartItems = order.get_cart_items
+    #
+    # else:
+    #     items = []
+    #     order = {'get_cart_total': 0, 'get_cart_items': 0}
+    #     cartItems = order['get_cart_items']
+    #
+    # context = {'items': items, 'order': order}
+    # return render(request, 'cart.html', context)
+
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
-        # cartItems = order.get_cart_items
+        cartItems = order.get_cart_items
 
     else:
+        try:
+            cart = json.loads(request.COOKIES['cart'])
+        except:
+            cart = {}
+        print('Cart:', cart)
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0}
-        # cartItems = order['get_cart_items']
-
-    context = {'items': items, 'order': order}
+        cartItems = order['get_cart_items']
+        for i in cart:
+            try:
+                cartItems += cart[i]['quantity']
+                drink = CoffeMachine.objects.get(id=i)
+                total = (drink.price_with_profit * cart[i]['quantity'])
+                order['get_cart_total'] += total
+                order['get_cart_items'] += cart[i]['quantity']
+                item = {
+                    'product': {
+                        'id': drink.id,
+                        'name': drink.productName,
+                        'price': drink.price_with_profit,
+                    },
+                    'quantity': cart[i]['quantity'],
+                    'get_total': total,
+                }
+                items.append(item)
+            except:
+                pass
+    context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
+

@@ -11,9 +11,54 @@
     <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
    <script type="text/javascript">
-        let user = '{{request.user}}'
+		var user = '{{request.user}}'
 
-    </script>
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')
+
+		function getCookie(name) {
+		    // Split cookie string and get all individual name=value pairs in an array
+		    var cookieArr = document.cookie.split(";");
+
+		    // Loop through the array elements
+		    for(var i = 0; i < cookieArr.length; i++) {
+		        var cookiePair = cookieArr[i].split("=");
+
+		        /* Removing whitespace at the beginning of the cookie name
+		        and compare it with the given string */
+		        if(name == cookiePair[0].trim()) {
+		            // Decode the cookie value and return
+		            return decodeURIComponent(cookiePair[1]);
+		        }
+		    }
+
+		    // Return null if not found
+		    return null;
+		}
+		var cart = JSON.parse(getCookie('cart'))
+
+		if (cart == undefined){
+			cart = {}
+			console.log('Cart Created!', cart)
+			document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+		}
+		console.log('Cart:', cart)
+
+	</script>
 
 </head>
 <body>
@@ -184,35 +229,66 @@
                     console.log('User:', user)
 
                     if (user == 'AnonymousUser'){
-                        console.log('Not logged in')
+                        {#updateUserOrder(productId, action, quantity)#}
+                        addCookieItem(productId, action, quantity)
                     }else{
+                        {#updateUserOrder(productId, action, quantity)#}
                         updateUserOrder(productId, action, quantity)
                     }
                 })
             }
 
             function updateUserOrder(productId, action, quantity){
-                console.log('User is logged in, sending data...')
 
-                let url = '/update_item/'
+                    console.log('User is authenticated, sending data...')
 
-                fetch(url, {
-                    method:'POST',
-                    headers:{
-                        'Content-Type':'application/json',
-                        {#'X-CSRFToken':csrftoken,#}
-                    },
-                    body:JSON.stringify({'productId':productId, 'action':action, 'quantity':quantity})
-                })
 
-                .then((response) => {
-                    return response.json()
-                })
+                    var url = '/update_item/'
 
-                .then((data) => {
-                    console.log('Data:', data)
-                    location.reload()
-                })
+                    fetch(url, {
+                        method:'POST',
+                        headers:{
+                            'Content-Type':'application/json',
+                            'X-CSRFToken':csrftoken,
+                        },
+                        body:JSON.stringify({'productId':productId, 'action':action})
+                    })
+                        .then((response) => {
+                            return response.json();
+                        })
+                        .then((data) => {
+                            location.reload()
+                        });
+                }
+
+            function addCookieItem(productId, action){
+                console.log('User is not authenticated')
+
+                if (action == 'add'){
+                    if (cart[productId] == undefined){
+                        cart[productId] = {'quantity':1}
+                    }else{
+                        cart[productId]['quantity'] += 1
+                    }
+                }
+
+                if (action == 'remove'){
+                    cart[productId]['quantity'] -= 1
+
+                    if (cart[productId]['quantity'] <= 0){
+
+                        console.log('Item should be deleted')
+
+                        delete cart[productId];
+                    }
+                }
+                console.log('CART:', cart)
+
+                document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+
+                location.reload()
+
             }
 
 
