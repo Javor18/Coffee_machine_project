@@ -54,62 +54,82 @@ def drinks(request, name):
     context = {'price': price, 'name': name, 'drink': drink}
     return render(request, 'drinks_info.html', context)
 
-@csrf_exempt
+# @csrf_exempt
+# def updateItem(request):
+#     print("UpdateItem")
+#     print(request.body)
+#     if request.method == "POST":
+#         print(request)
+#         data = json.loads(request.body)
+#         print(data)
+#
+#         drink = data['productId']
+#         action = data['action']
+#         quantity = data['quantity']
+#         print('Action:', action)
+#         print('Product:', drink)
+#         print('Quantity:', data['quantity'])
+#
+#         customer = request.user.customer
+#         drink = CoffeMachine.objects.get(id=int(drink))
+#         order, created = Order.objects.get_or_create(customer=customer, complete=False)
+#         orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
+#
+#
+#         if action == 'add':
+#             orderItem.quantity = (orderItem.quantity + int(quantity))
+#
+#         elif action == 'remove':
+#             orderItem.quantity = (orderItem.quantity - 1)
+#
+#         elif action == 'plus':
+#             orderItem.quantity = (orderItem.quantity + 1)
+#
+#         elif action == 'delete':
+#             orderItem.quantity = 0
+#
+#         orderItem.save()
+#
+#         if orderItem.quantity <= 0:
+#             orderItem.delete()
+#
+#     return JsonResponse({"message": "ok"})
+
 def updateItem(request):
-    print("UpdateItem")
-    print(request.body)
-    if request.method == "POST":
-        print(request)
-        data = json.loads(request.body)
-        print(data)
+    data = json.loads(request.body)
+    drink = data['productId']
+    action = data['action']
+    quantity = data['quantity']
+    print('Action:', action)
+    print('Product:', drink)
+    print('Quantity:', data['quantity'])
 
-        drink = data['productId']
-        action = data['action']
-        quantity = data['quantity']
-        print('Action:', action)
-        print('Product:', drink)
-        print('Quantity:', data['quantity'])
+    customer = request.user.customer
+    drink = CoffeMachine.objects.get(id=int(drink))
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
-        customer = request.user.customer
-        drink = CoffeMachine.objects.get(id=int(drink))
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity + int(quantity))
 
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
 
-        if action == 'add':
-            orderItem.quantity = (orderItem.quantity + int(quantity))
+    elif action == 'plus':
+        orderItem.quantity = (orderItem.quantity + 1)
 
-        elif action == 'remove':
-            orderItem.quantity = (orderItem.quantity - 1)
+    elif action == 'delete':
+        orderItem.quantity = 0
 
-        elif action == 'plus':
-            orderItem.quantity = (orderItem.quantity + 1)
+    orderItem.save()
 
-        elif action == 'delete':
-            orderItem.quantity = 0
-
-        orderItem.save()
-
-        if orderItem.quantity <= 0:
-            orderItem.delete()
+    if orderItem.quantity <= 0:
+        orderItem.delete()
 
     return JsonResponse({"message": "ok"})
 
-def cart(request):
 
-    # if request.user.is_authenticated:
-    #     customer = request.user.customer
-    #     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    #     items = order.orderitem_set.all()
-    #     cartItems = order.get_cart_items
-    #
-    # else:
-    #     items = []
-    #     order = {'get_cart_total': 0, 'get_cart_items': 0}
-    #     cartItems = order['get_cart_items']
-    #
-    # context = {'items': items, 'order': order}
-    # return render(request, 'cart.html', context)
+def cart(request):
 
     if request.user.is_authenticated:
         customer = request.user.customer

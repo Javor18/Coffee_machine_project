@@ -65,99 +65,80 @@
 
                      <script>
 
-                         let user = '{{request.user}}'
-                         let trash = document.getElementById('trash');
-                         let arrowUp = document.getElementById('arrow-up');
-                         let arrowDown = document.getElementById('arrow-down');
+                        let arrowUp = document.getElementById('arrow-up');
+                        let arrowDown = document.getElementById('arrow-down');
+                        let trash = document.getElementById('trash');
+                        let user = '{{ user }}';
 
-                         trash.addEventListener('click', Operation);
-                         arrowUp.addEventListener('click', Operation);
-                         arrowDown.addEventListener('click', Operation);
+                        arrowUp.addEventListener('click', function(e){
+                            console.log('arrow up clicked');
+                            console.log(e.target);
 
+                            let item = e.target.dataset.item;
+                            let quantity = e.target.dataset.quantity;
+                            let action = e.target.dataset.action;
+                            console.log('item:', item, 'quantity:', quantity, 'action:', action);
+                            if (user == 'AnonymousUser'){
+                                console.log('User is not authenticated')
+                            }else{
+                                updateUserOrder(item, action)
+                            }
+                        });
 
+                        arrowDown.addEventListener('click', function(e){
+                            console.log('arrow down clicked');
+                            console.log(e.target);
 
-                         function Operation(e){
+                            let item = e.target.dataset.item;
+                            let quantity = e.target.dataset.quantity;
+                            let action = e.target.dataset.action;
+                            console.log('item:', item, 'quantity:', quantity, 'action:', action);
+                            if (user == 'AnonymousUser'){
+                                console.log('User is not authenticated')
+                            }else{
+                                updateUserOrder(item, action)
+                            }
+                        });
 
-                             let productId = e.target.dataset.item;
-                             let quantity = e.target.dataset.quantity;
-                             let action = e.target.dataset.action;
+                        trash.addEventListener('click', function(e){
+                            console.log('trash clicked');
+                            console.log(e.target);
+                            console.log(e.target.dataset);
 
-                             console.log('User:', user)
+                            let item = e.target.dataset.item;
+                            let quantity = e.target.dataset.quantity;
+                            let action = e.target.dataset.action;
+                            console.log('item:', item, 'quantity:', quantity, 'action:', action);
+                            if (user == 'AnonymousUser'){
+                                console.log('User is not authenticated')
+                            }else{
+                                updateUserOrder(item, action)
+                            }
+                        });
 
-                             if (action == 'delete'){
-                                 console.log('Item should be deleted')
-                                 delete cart[productId];
-                             }
+                        function updateUserOrder(item, action){
+                            console.log('User is authenticated, sending data...')
 
-                             if (action == 'plus'){
-                                 console.log('Item should be added')
-                                 quantity += 1
-                             }
+                            let url = '/update_item/'
 
-                                if (action == 'remove'){
-                                    console.log('Item should be removed')
-                                    quantity -= 1
+                            fetch(url, {
+                                method:'POST',
+                                headers:{
+                                    'Content-Type':'application/json',
+                                    'X-CSRFToken':csrftoken,
+                                },
+                                body:JSON.stringify({'item':item, 'action':action})
+                            })
 
-                                    if (quantity <= 0){
-                                        console.log('Item should be deleted')
-                                        delete cart[productId];
-                                    }
-                                }
+                                .then((response) => {
+                                    return response.json()
+                                })
 
-                         function updateUserOrder(productId, action, quantity){
-
-                             console.log('User is authenticated, sending data...')
-
-                             var url = '/update_item/'
-
-                             fetch(url, {
-                                 method:'POST',
-                                 headers:{
-                                     'Content-Type':'application/json',
-                                     'X-CSRFToken':csrftoken,
-                                 },
-                                 body:JSON.stringify({'productId':productId, 'action':action})
-                             })
-                                 .then((response) => {
-                                     return response.json();
-                                 })
-                                 .then((data) => {
-                                     location.reload()
-                                 });
-                         }
-
-                         function addCookieItem(productId, action, quantity){
-                             console.log('User is not authenticated')
-
-                             if (action == 'add'){
-
-                                 if (cart[productId] == undefined){
-
-                                     cart[productId] = {'quantity': parseInt(quantity)}
-
-                                 }else{
-
-                                     cart[productId]['quantity'] += parseInt(quantity)
-                                 }
-                             }
-
-                             if (action == 'remove'){
-                                 cart[productId]['quantity'] -= 1
-
-                                 if (cart[productId]['quantity'] <= 0){
-
-                                     console.log('Item should be deleted')
-
-                                     delete cart[productId];
-                                 }
-                             }
-                             console.log('CART:', cart)
-
-                             document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
-
-                             location.reload()
-
-                         }
+                                .then((data) => {
+                                    console.log('data:', data)
+                                    location.reload()
+                                })
+                        }
 
 
                      </script>
@@ -165,60 +146,4 @@
             </div>
         </div>
     </div>
-
-
-
-
-    <script>
-        let user = '{{request.user}}'
-
-        let trash = document.getElementById('trash');
-        let arrowUp = document.getElementById('arrow-up');
-        let arrowDown = document.getElementById('arrow-down');
-
-        trash.addEventListener('click', Operation);
-        arrowUp.addEventListener('click', Operation);
-        arrowDown.addEventListener('click', Operation);
-
-            function Operation(){
-                console.log('trash clicked');
-                let productId = this.dataset.item;
-                let quantity = this.dataset.quantity;
-                let action = this.dataset.action;
-
-
-               console.log('User:', user)
-
-                if (user == 'AnonymousUser'){
-                    console.log('Not logged in')
-                }else{
-                    updateUserOrder(productId, action, quantity)
-                        }
-        }
-
-        function updateUserOrder(productId, action, quantity){
-                console.log('User is logged in, sending data...')
-
-                let url = '/update_item/';
-
-                console.log(productId, action, quantity);
-                fetch(url, {
-                    method:'POST',
-                    headers:{
-                        'Content-Type':'application/json',
-                        'X-CSRFToken':csrftoken,
-                    },
-                    body:JSON.stringify({'productId':productId, 'action':action, 'quantity':quantity})
-                })
-                .then((response) => {
-                    return response.json()
-                })
-                .then((data) => {
-                    console.log('Data:', data)
-                    location.reload()
-                })
-            }
-
-    </script>
-
 {% endblock content %}
