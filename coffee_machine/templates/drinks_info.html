@@ -261,14 +261,16 @@
                         });
                 }
 
-            function addCookieItem(productId, action){
+            function addCookieItem(productId, action, quantity){
                 console.log('User is not authenticated')
 
                 if (action == 'add'){
                     if (cart[productId] == undefined){
-                        cart[productId] = {'quantity':1}
+                        {#cart[productId] = {'quantity':1}#}
+                        cart[productId] = {'quantity': parseInt(quantity)}
                     }else{
-                        cart[productId]['quantity'] += 1
+                        {#cart[productId]['quantity'] += 1#}
+                        cart[productId]['quantity'] += parseInt(quantity)
                     }
                 }
 
