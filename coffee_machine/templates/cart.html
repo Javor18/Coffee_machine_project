@@ -1,12 +1,8 @@
-{#{% extends 'base.html' %}#}
 {% load static %}
-{#<link rel="stylesheet" href="{% static 'cart.css' %}">#}
 {% block css_block %}
     <link rel="stylesheet" href="{% static 'cart.css' %}">
     <link rel="stylesheet" href="{% static 'cart-responsive.css' %}">
 {% endblock %}
-{# <link rel="stylesheet" href="{% static 'js/cart.js' %}">#}
-{#<link rel="stylesheet" href="{% static 'cart.css' %}#}
 <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
 
 {% block content %}
@@ -46,18 +42,14 @@
 
                 {% for item in items %}
 				<div class="cart-row">
-{#					<div style="flex:2"><<img src="{% static 'images/'|add:drink.productName|add:'.jpg' %}" alt="Drink Image" /></div>#}
                     <div style="flex:2"><img class="row-image" src="{% static 'images/'|add:item.product.name|add:'.jpg' %}" alt="Drink Image" /></div>
-{#                    <div style="flex:2"><p>{{item.product.productName}}</p></div>#}
                     <div style="flex:2"><p>{{item.product.name}}</p></div>
                     <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
 					<div style="flex:1">
 						<p class="quantity">x{{item.quantity}}</p>
 						<div class="quantity">
-{#							<img class="chg-quantity" src="{% static  'images/arrow-up.png' %}">#}
 
                             <div class="chg-quantity">
-
                                 <button id="arrow-up" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="plus"><i class="fa-solid fa-arrow-up"></i></button>
                                 <button id="arrow-down" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="remove"><i class="fa-solid fa-arrow-down"></i></button>
                             </div>
@@ -66,8 +58,8 @@
                     <div style="flex:1"><p>${{item.get_total|floatformat:2}}</p></div>
                  <div style="flex:1">
 
-                     <button id="trash" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
-{#                        <button id="trash" data-action="remove"><i class="fa-solid fa-trash"></i></button>#}
+{#                     <button id="trash" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="delete"><i class="fa-solid fa-trash"></i></button>#}
+                        <button id="trash" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
                     </div>
 				</div>
 
@@ -82,79 +74,91 @@
                          arrowUp.addEventListener('click', Operation);
                          arrowDown.addEventListener('click', Operation);
 
-                         function Operation(){
-                             console.log('trash clicked');
-                             let productId = this.dataset.item;
-                             let quantity = this.dataset.quantity;
-                             let action = this.dataset.action;
+
+
+                         function Operation(e){
+
+                             let productId = e.target.dataset.item;
+                             let quantity = e.target.dataset.quantity;
+                             let action = e.target.dataset.action;
 
                              console.log('User:', user)
 
-                             if (user == 'AnonymousUser'){
-                                    addCookieItem(productId, action, quantity)
-
-                             }else{
-
-                                 updateUserOrder(productId, action, quantity)
-
+                             if (action == 'delete'){
+                                 console.log('Item should be deleted')
+                                 delete cart[productId];
                              }
-                         }
+
+                             if (action == 'plus'){
+                                 console.log('Item should be added')
+                                 quantity += 1
+                             }
+
+                                if (action == 'remove'){
+                                    console.log('Item should be removed')
+                                    quantity -= 1
+
+                                    if (quantity <= 0){
+                                        console.log('Item should be deleted')
+                                        delete cart[productId];
+                                    }
+                                }
 
                          function updateUserOrder(productId, action, quantity){
 
-                             console.log('User is logged in, sending data...')
+                             console.log('User is authenticated, sending data...')
 
-                             let url = '/update_item/';
-
-                             console.log(productId, action, quantity);
+                             var url = '/update_item/'
 
                              fetch(url, {
                                  method:'POST',
-
                                  headers:{
                                      'Content-Type':'application/json',
-                                     {#'X-CSRFToken':csrftoken,#}
+                                     'X-CSRFToken':csrftoken,
                                  },
-                                 body:JSON.stringify({'productId':productId, 'action':action, 'quantity':quantity})
+                                 body:JSON.stringify({'productId':productId, 'action':action})
                              })
                                  .then((response) => {
-                                     return response.json()
+                                     return response.json();
                                  })
                                  .then((data) => {
-                                     console.log('Data:', data)
                                      location.reload()
-                                 })
+                                 });
                          }
 
-                          function addCookieItem(productId, action){
-                console.log('User is not authenticated')
+                         function addCookieItem(productId, action, quantity){
+                             console.log('User is not authenticated')
 
-                if (action == 'add'){
-                    if (cart[productId] == undefined){
-                        cart[productId] = {'quantity':1}
-                    }else{
-                        cart[productId]['quantity'] += 1
-                    }
-                }
+                             if (action == 'add'){
 
-                if (action == 'remove'){
-                    cart[productId]['quantity'] -= 1
+                                 if (cart[productId] == undefined){
 
-                    if (cart[productId]['quantity'] <= 0){
+                                     cart[productId] = {'quantity': parseInt(quantity)}
 
-                        console.log('Item should be deleted')
+                                 }else{
 
-                        delete cart[productId];
-                    }
-                }
-                console.log('CART:', cart)
+                                     cart[productId]['quantity'] += parseInt(quantity)
+                                 }
+                             }
 
-                document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+                             if (action == 'remove'){
+                                 cart[productId]['quantity'] -= 1
 
+                                 if (cart[productId]['quantity'] <= 0){
 
-                location.reload()
+                                     console.log('Item should be deleted')
 
-            }
+                                     delete cart[productId];
+                                 }
+                             }
+                             console.log('CART:', cart)
+
+                             document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+                             location.reload()
+
+                         }
+
 
                      </script>
                 {% endfor %}
@@ -165,56 +169,56 @@
 
 
 
-{#    <script>#}
-{#        let user = '{{request.user}}'#}
-{##}
-{#        let trash = document.getElementById('trash');#}
-{#        let arrowUp = document.getElementById('arrow-up');#}
-{#        let arrowDown = document.getElementById('arrow-down');#}
-{##}
-{#        trash.addEventListener('click', Operation);#}
-{#        arrowUp.addEventListener('click', Operation);#}
-{#        arrowDown.addEventListener('click', Operation);#}
-{##}
-{#            function Operation(){#}
-{#                console.log('trash clicked');#}
-{#                let productId = this.dataset.item;#}
-{#                let quantity = this.dataset.quantity;#}
-{#                let action = this.dataset.action;#}
-{##}
-{##}
-{#               console.log('User:', user)#}
-{##}
-{#                if (user == 'AnonymousUser'){#}
-{#                    console.log('Not logged in')#}
-{#                }else{#}
-{#                    updateUserOrder(productId, action, quantity)#}
-{#                        }#}
-{#        }#}
-{##}
-{#        function updateUserOrder(productId, action, quantity){#}
-{#                console.log('User is logged in, sending data...')#}
-{##}
-{#                let url = '/update_item/';#}
-{##}
-{#                console.log(productId, action, quantity);#}
-{#                fetch(url, {#}
-{#                    method:'POST',#}
-{#                    headers:{#}
-{#                        'Content-Type':'application/json',#}
-                        {#'X-CSRFToken':csrftoken,#}
-{#                    },#}
-{#                    body:JSON.stringify({'productId':productId, 'action':action, 'quantity':quantity})#}
-{#                })#}
-{#                .then((response) => {#}
-{#                    return response.json()#}
-{#                })#}
-{#                .then((data) => {#}
-{#                    console.log('Data:', data)#}
-{#                    location.reload()#}
-{#                })#}
-{#            }#}
-{##}
-{#    </script>#}
+    <script>
+        let user = '{{request.user}}'
+
+        let trash = document.getElementById('trash');
+        let arrowUp = document.getElementById('arrow-up');
+        let arrowDown = document.getElementById('arrow-down');
+
+        trash.addEventListener('click', Operation);
+        arrowUp.addEventListener('click', Operation);
+        arrowDown.addEventListener('click', Operation);
+
+            function Operation(){
+                console.log('trash clicked');
+                let productId = this.dataset.item;
+                let quantity = this.dataset.quantity;
+                let action = this.dataset.action;
+
+
+               console.log('User:', user)
+
+                if (user == 'AnonymousUser'){
+                    console.log('Not logged in')
+                }else{
+                    updateUserOrder(productId, action, quantity)
+                        }
+        }
+
+        function updateUserOrder(productId, action, quantity){
+                console.log('User is logged in, sending data...')
+
+                let url = '/update_item/';
+
+                console.log(productId, action, quantity);
+                fetch(url, {
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'productId':productId, 'action':action, 'quantity':quantity})
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log('Data:', data)
+                    location.reload()
+                })
+            }
+
+    </script>
 
 {% endblock content %}

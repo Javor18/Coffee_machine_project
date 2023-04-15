@@ -5,8 +5,6 @@
     {% extends 'base.html' %}
     <title>{{ drink.productName }}</title>
     {% load static %}
-{#    <link rel="stylesheet" href="{% static 'LeafTea.css' %}">#}
-{#    <link rel="stylesheet" href="{% static 'js/cart.js' %}#}
     <link rel="stylesheet" href="{% url 'get_drink_info' product.product_name %}">
     <script src="https://kit.fontawesome.com/4cf7026c74.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -95,7 +93,6 @@
 
                     <div class="total-price">
                         <span class="total-price-text">Total:</span>
-{#                        <span class="total-price-value">{{ total.value }}</span>#}
                         <input class="tot-price" type="number" id="price" value="{{ total.value }}" disabled><span>$</span>
                     </div>
 
@@ -115,12 +112,7 @@
                             <div class="dots">
                             <h1 class="dot one">.</h1><h1 class="dot two">.</h1><h1 class="dot three">.</h1>
                             </div>
-                            </div>
-{#                        <button data-drink="{{ drink.id }}" data-action="add" class="add-to-cart-btn update-cart" type="button">Add to cart</button>#}
-
-{#                        <button data-product="{{ drink.id }}" data-action="add" class="add-to-cart-btn update-cart" type="button">Add to cart</button>#}
-
-{#                        I want to make this button to add to cart and then redirect to the cart page#}
+                        </div>
                         <button data-product="{{ drink.id }}" data-action="add" class="add-to-cart-btn update-cart" type="button">Add to cart</button>
                     </div>
                 </div>
@@ -157,7 +149,6 @@
             if (quantityValue > 1) {
                 quantityValue--;
                 quantity.value = quantityValue;
-                {#total.value = (priceValue * quantityValue).toFixed(2);#}
                 total.value = ({{price}} * quantityValue).toFixed(2);
             }
         });
@@ -266,10 +257,8 @@
 
                 if (action == 'add'){
                     if (cart[productId] == undefined){
-                        {#cart[productId] = {'quantity':1}#}
                         cart[productId] = {'quantity': parseInt(quantity)}
                     }else{
-                        {#cart[productId]['quantity'] += 1#}
                         cart[productId]['quantity'] += parseInt(quantity)
                     }
                 }
