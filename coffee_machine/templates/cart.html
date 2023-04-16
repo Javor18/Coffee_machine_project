@@ -20,7 +20,22 @@
 						<th><h5>Total:<strong>${{order.get_cart_total|floatformat:2}}</strong></h5></th>
 						<th>
 {#							<a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>#}
-                            <button style="float:right; margin:5px;" class="btn btn-success">Pay Now</button>
+                            <button style="float:right; margin:5px;" id="show-img-btn" class="btn btn-success">Pay Now</button>
+                            <div id="img-overlay">
+                            <img src="{% static 'images/card-payment.png' %}" alt="">
+                        </div>
+
+                        <div id="img-overlay-1">
+                            <h1>Please collect your order</h1>
+                            <img src="{% static 'images/checked.png' %}">
+                        </div>
+
+                        <div id="loading-dots">
+                            <h1>Loading</h1>
+                            <div class="dots">
+                            <h1 class="dot one">.</h1><h1 class="dot two">.</h1><h1 class="dot three">.</h1>
+                            </div>
+                        </div>
 						</th>
 					</tr>
 				</table>
@@ -50,8 +65,8 @@
 						<div class="quantity">
 
                             <div class="chg-quantity">
-                                <button id="arrow-up" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="plus"><i class="fa-solid fa-arrow-up"></i></button>
-                                <button id="arrow-down" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="remove"><i class="fa-solid fa-arrow-down"></i></button>
+                                <button id="arrow-up" data-product="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="plus"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button id="arrow-down" data-item="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="remove"><i class="fa-solid fa-arrow-down"></i></button>
                             </div>
 						</div>
 					</div>
@@ -62,8 +77,12 @@
                         <button id="trash" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
                     </div>
 				</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-                     <script>
+    <script>
 
                         let arrowUp = document.getElementById('arrow-up');
                         let arrowDown = document.getElementById('arrow-down');
@@ -142,8 +161,40 @@
 
 
                      </script>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+
+
+    <script type="text/javascript">
+
+         const showImageBtn = document.getElementById('show-img-btn');
+         const imageOverlay = document.getElementById('img-overlay');
+         const imageOverlay1 = document.getElementById('img-overlay-1')
+         const LoadDots = document.getElementById('loading-dots')
+
+        showImageBtn.addEventListener('click', function() {
+            imageOverlay.style.display = 'block';
+            console.log('clicked')
+        });
+
+        imageOverlay.addEventListener('click', function() {
+            LoadDots.style.display = 'block';
+            imageOverlay.style.display = 'none';
+        });
+
+        LoadDots.addEventListener('click', function (){
+            imageOverlay1.style.display = 'block';
+            LoadDots.style.display = 'none';
+            imageOverlay.style.display = 'none';
+        })
+
+         imageOverlay1.addEventListener('click', function (){
+             imageOverlay1.style.display = 'none'
+         })
+
+        setTimeout(function() {
+            let image = document.getElementById('img-overlay');
+            image.setAttribute('src', '{% static 'images/checked.png' %}');
+            image.setAttribute('alt', 'New Image');
+    }, 5000); // Replace the image after 5 seconds (5000 milliseconds)
+
+         </script>
 {% endblock content %}
