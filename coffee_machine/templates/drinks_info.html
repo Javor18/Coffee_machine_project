@@ -285,7 +285,7 @@
 
 {#         ///////////////// CSRF Token ////////////////#}
 
-
+            let csrftoken = getToken('csrftoken')
              function getToken(name) {
                  var cookieValue = null;
                  if (document.cookie && document.cookie !== '') {
@@ -305,7 +305,7 @@
                  }
                  return cookieValue;
              }
-             let csrftoken = getToken('csrftoken')
+             {#let csrftoken = getToken('csrftoken')#}
 
          </script>
 

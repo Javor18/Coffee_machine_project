@@ -13,8 +13,9 @@ class CoffeMachine(models.Model):
     # profit_percent = models.IntegerField()
     # image_itr = models.CharField(max_length=10)
 
+
     def __repr__(self):
-        return self.productName, self.price_with_profit
+        return f"{self.productName} {self.price_with_profit}"
 
     def __str__(self):
         return self.productName
@@ -27,19 +28,9 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Customer(models.Model):
-
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
-
-
 class Order(models.Model):
 
-        customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+        customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
         date_ordered = models.DateTimeField(auto_now_add=True)
         complete = models.BooleanField(default=False)
         transaction_id = models.CharField(max_length=100, null=True)

@@ -6,25 +6,40 @@ import json
 import datetime
 
 from .models import *
+from .utils import cookieCart, cartData, get_random_string
 # from .utils import cookieCart, cartData, guestOrder
 
 # Create your views here.
 
 def main(request):
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
+    data = cartData(request)
+    print(data)
 
-    else:
+    # if request.user.is_authenticated:
 
-        # Create empty cart for now for non-logged in user
+    # customer = request.user.customer
 
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+    # order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+    order = data['order']
+
+    # created = data['created']
+    # items = order.orderitem_set.all()
+
+    items = data['items']
+
+    # cartItems = order.get_cart_items
+
+    cartItems = data['cartItems']
+
+    # else:
+    #
+    #     # Create empty cart for now for non-logged in user
+    #
+    #     items = []
+    #     order = {'get_cart_total': 0, 'get_cart_items': 0}
+    #     cartItems = order['get_cart_items']
 
     drinks = CoffeMachine.objects.all()
     context = {'drinks': drinks, 'cartItems': cartItems}
@@ -33,19 +48,30 @@ def main(request):
 
 def drinks(request, name):
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
+    data = cartData(request)
 
-    else:
+    # if request.user.is_authenticated:
 
-        # Create empty cart for now for non-logged in user
+    # customer = request.user.customer
+    # order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+    order = data['order']
+
+    # items = order.orderitem_set.all()
+
+    items = data['items']
+
+    # cartItems = order.get_cart_items
+
+    cartItems = data['cartItems']
+
+    # else:
+    #
+    #     # Create empty cart for now for non-logged in user
+    #
+    #     items = []
+    #     order = {'get_cart_total': 0, 'get_cart_items': 0}
+    #     cartItems = order['get_cart_items']
 
     # drink = CoffeMachine.objects.get(productName=name)
     drink = CoffeMachine.objects.get(productName=name)
@@ -54,59 +80,75 @@ def drinks(request, name):
     context = {'price': price, 'name': name, 'drink': drink}
     return render(request, 'drinks_info.html', context)
 
+
+
 # @csrf_exempt
 # def updateItem(request):
-#     print("UpdateItem")
-#     print(request.body)
-#     if request.method == "POST":
-#         print(request)
-#         data = json.loads(request.body)
-#         print(data)
 #
-#         drink = data['productId']
-#         action = data['action']
-#         quantity = data['quantity']
-#         print('Action:', action)
-#         print('Product:', drink)
-#         print('Quantity:', data['quantity'])
+#     print(request.POST)
+#     data = cartData(request)
+#     print(data)
 #
-#         customer = request.user.customer
-#         drink = CoffeMachine.objects.get(id=int(drink))
-#         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-#         orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
+#     drink = data['items'][0]['product']['name']
+#     action = data.get("action")
+#     quantity = data['items'][0]['quantity']
+#     drink = CoffeMachine.objects.get(productName=drink)
+#     # drink_id = drink.id
 #
+#     print('Action:', action)
+#     print('Product:', drink)
+#     print('Quantity:', quantity)
 #
-#         if action == 'add':
-#             orderItem.quantity = (orderItem.quantity + int(quantity))
+#     if request.user.is_anonymous:
+#         username = get_random_string(10)
+#         customer = User.objects.create_user(username, "password", f"{username}@add.com")
+#     else:
+#         customer = request.user
 #
-#         elif action == 'remove':
-#             orderItem.quantity = (orderItem.quantity - 1)
+#     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 #
-#         elif action == 'plus':
-#             orderItem.quantity = (orderItem.quantity + 1)
+#     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 #
-#         elif action == 'delete':
-#             orderItem.quantity = 0
+#     if action == 'add':
+#         orderItem.quantity = (orderItem.quantity + int(quantity))
 #
-#         orderItem.save()
+#     elif action == 'remove':
+#         orderItem.quantity = (orderItem.quantity - 1)
 #
-#         if orderItem.quantity <= 0:
-#             orderItem.delete()
+#     elif action == 'plus':
+#         orderItem.quantity = (orderItem.quantity + 1)
+#
+#     elif action == 'delete':
+#         orderItem.quantity = 0
+#
+#     orderItem.save()
+#
+#     if orderItem.quantity <= 0:
+#         orderItem.delete()
 #
 #     return JsonResponse({"message": "ok"})
 
+
 def updateItem(request):
     data = json.loads(request.body)
-    drink = data['productId']
-    action = data['action']
+    drink = data['drink']
+    action = data.get("action")
     quantity = data['quantity']
+    drink = CoffeMachine.objects.get(productName=drink)
+    drink_id = drink.id
+
     print('Action:', action)
     print('Product:', drink)
-    print('Quantity:', data['quantity'])
+    print('Quantity:', quantity)
 
-    customer = request.user.customer
-    drink = CoffeMachine.objects.get(id=int(drink))
+    if request.user.is_anonymous:
+        username = get_random_string(10)
+        customer = User.objects.create_user(username, "password", f"{ username }@add.com")
+    else:
+        customer = request.user
+
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
     if action == 'add':
@@ -124,15 +166,17 @@ def updateItem(request):
     orderItem.save()
 
     if orderItem.quantity <= 0:
+
         orderItem.delete()
 
     return JsonResponse({"message": "ok"})
 
 
+
 def cart(request):
 
     if request.user.is_authenticated:
-        customer = request.user.customer
+        customer = request.user
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
@@ -146,6 +190,7 @@ def cart(request):
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems = order['get_cart_items']
+
         for i in cart:
             try:
                 cartItems += cart[i]['quantity']
@@ -165,6 +210,7 @@ def cart(request):
                 items.append(item)
             except:
                 pass
+
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
 

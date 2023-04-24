@@ -61,7 +61,8 @@
                     <div style="flex:2"><p>{{item.product.name}}</p></div>
                     <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
 					<div style="flex:1">
-						<p class="quantity">x{{item.quantity}}</p>
+{#						<p class="quantity">x{{item.quantity}}</p>#}
+                        <p class="quantity">{{item.quantity}}</p>
 						<div class="quantity">
 
                             <div class="chg-quantity">
@@ -89,75 +90,84 @@
                         let trash = document.getElementById('trash');
                         let user = '{{ user }}';
 
-                        arrowUp.addEventListener('click', function(e){
-                            console.log('arrow up clicked');
-                            console.log(e.target);
+                        arrowUp.addEventListener('click', Operation);
+                        arrowDown.addEventListener('click', Operation);
+                        trash.addEventListener('click', Operation);
 
-                            let item = e.target.dataset.item;
-                            let quantity = e.target.dataset.quantity;
-                            let action = e.target.dataset.action;
-                            console.log('item:', item, 'quantity:', quantity, 'action:', action);
-                            if (user == 'AnonymousUser'){
-                                console.log('User is not authenticated')
-                            }else{
-                                updateUserOrder(item, action)
+
+                        function Operation() {
+                            let action = this.dataset.action;
+                            let product = this.dataset.product;
+
+                            console.log('action:', action);
+                            console.log('product:', product);
+
+                            if (user === 'AnonymousUser') {
+                                updateUserOrder(action, product)
+                            } else {
+                                updateUserOrder(action, product)
                             }
-                        });
 
-                        arrowDown.addEventListener('click', function(e){
-                            console.log('arrow down clicked');
-                            console.log(e.target);
-
-                            let item = e.target.dataset.item;
-                            let quantity = e.target.dataset.quantity;
-                            let action = e.target.dataset.action;
-                            console.log('item:', item, 'quantity:', quantity, 'action:', action);
-                            if (user == 'AnonymousUser'){
-                                console.log('User is not authenticated')
-                            }else{
-                                updateUserOrder(item, action)
+                            if (action === 'delete') {
+                                this.parentElement.parentElement.parentElement.remove();
                             }
-                        });
 
-                        trash.addEventListener('click', function(e){
-                            console.log('trash clicked');
-                            console.log(e.target);
-                            console.log(e.target.dataset);
-
-                            let item = e.target.dataset.item;
-                            let quantity = e.target.dataset.quantity;
-                            let action = e.target.dataset.action;
-                            console.log('item:', item, 'quantity:', quantity, 'action:', action);
-                            if (user == 'AnonymousUser'){
-                                console.log('User is not authenticated')
-                            }else{
-                                updateUserOrder(item, action)
+                            if (action === 'plus') {
+                                this.parentElement.parentElement.previousElementSibling.innerHTML = parseInt(this.parentElement.parentElement.previousElementSibling.innerHTML) + 1;
                             }
+
+                            if (action === 'remove') {
+                                this.parentElement.parentElement.previousElementSibling.innerHTML = parseInt(this.parentElement.parentElement.previousElementSibling.innerHTML) - 1;
+                            }
+
+                    }
+
+                    function updateUserOrder(action, product) {
+                        console.log('User is authenticated, sending data...');
+
+                        let url = '/update_item/';
+
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrftoken,
+                            },
+                            body: JSON.stringify({'action': action, 'product': product})
+                        })
+
+                        .then((response) => {
+                            return response.json();
+                        })
+
+                        .then((data) => {
+                            console.log('data:', data);
+                            location.reload();
                         });
+                    }
 
-                        function updateUserOrder(item, action){
-                            console.log('User is authenticated, sending data...')
 
-                            let url = '/update_item/'
+                    let csrftoken = getToken('csrftoken')
+             function getToken(name) {
+                 var cookieValue = null;
+                 if (document.cookie && document.cookie !== '') {
+                     var cookies = document.cookie.split(';');
 
-                            fetch(url, {
-                                method:'POST',
-                                headers:{
-                                    'Content-Type':'application/json',
-                                    'X-CSRFToken':csrftoken,
-                                },
-                                body:JSON.stringify({'item':item, 'action':action})
-                            })
+                     for (var i = 0; i < cookies.length; i++) {
 
-                                .then((response) => {
-                                    return response.json()
-                                })
+                         var cookie = cookies[i].trim();
 
-                                .then((data) => {
-                                    console.log('data:', data)
-                                    location.reload()
-                                })
-                        }
+                         if (cookie.substring(0, name.length + 1) === (name + '=')) {
+
+                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+
+                             break;
+                         }
+                     }
+                 }
+                 return cookieValue;
+             }
+             {#let csrftoken = getToken('csrftoken')#}
 
 
                      </script>
