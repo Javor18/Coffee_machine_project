@@ -82,60 +82,18 @@ def drinks(request, name):
 
 
 
-# @csrf_exempt
-# def updateItem(request):
-#
-#     print(request.POST)
-#     data = cartData(request)
-#     print(data)
-#
-#     drink = data['items'][0]['product']['name']
-#     action = data.get("action")
-#     quantity = data['items'][0]['quantity']
-#     drink = CoffeMachine.objects.get(productName=drink)
-#     # drink_id = drink.id
-#
-#     print('Action:', action)
-#     print('Product:', drink)
-#     print('Quantity:', quantity)
-#
-#     if request.user.is_anonymous:
-#         username = get_random_string(10)
-#         customer = User.objects.create_user(username, "password", f"{username}@add.com")
-#     else:
-#         customer = request.user
-#
-#     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-#
-#     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
-#
-#     if action == 'add':
-#         orderItem.quantity = (orderItem.quantity + int(quantity))
-#
-#     elif action == 'remove':
-#         orderItem.quantity = (orderItem.quantity - 1)
-#
-#     elif action == 'plus':
-#         orderItem.quantity = (orderItem.quantity + 1)
-#
-#     elif action == 'delete':
-#         orderItem.quantity = 0
-#
-#     orderItem.save()
-#
-#     if orderItem.quantity <= 0:
-#         orderItem.delete()
-#
-#     return JsonResponse({"message": "ok"})
-
-
+@csrf_exempt
 def updateItem(request):
-    data = json.loads(request.body)
-    drink = data['drink']
+
+    # print(request.POST)
+    data = cartData(request)
+    print(data)
+
+    drink = data['items'][0]['product']['name']
     action = data.get("action")
-    quantity = data['quantity']
+    quantity = data['items'][0]['quantity']
     drink = CoffeMachine.objects.get(productName=drink)
-    drink_id = drink.id
+    # drink_id = drink.id
 
     print('Action:', action)
     print('Product:', drink)
@@ -143,7 +101,7 @@ def updateItem(request):
 
     if request.user.is_anonymous:
         username = get_random_string(10)
-        customer = User.objects.create_user(username, "password", f"{ username }@add.com")
+        customer = User.objects.create_user(username, "password", f"{username}@add.com")
     else:
         customer = request.user
 
@@ -166,11 +124,12 @@ def updateItem(request):
     orderItem.save()
 
     if orderItem.quantity <= 0:
-
         orderItem.delete()
 
-    return JsonResponse({"message": "ok"})
+    # if OrderItem.objects.filter(order=order).count() == 0:
+    #     order.delete()
 
+    return JsonResponse({"message": "ok"})
 
 
 def cart(request):
