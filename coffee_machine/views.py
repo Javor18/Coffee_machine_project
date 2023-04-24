@@ -111,9 +111,6 @@ def updateItem(request):
 
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
-    if action == 'add':
-        orderItem.quantity = (orderItem.quantity + int(quantity))
-
     if action == 'remove':
         orderItem.quantity = (orderItem.quantity - 1)
 
@@ -128,9 +125,6 @@ def updateItem(request):
 
     if orderItem.quantity <= 0:
         orderItem.delete()
-
-    if OrderItem.objects.filter(order=order).count() == 0:
-        order.delete()
 
     return JsonResponse({"message": "ok"})
 

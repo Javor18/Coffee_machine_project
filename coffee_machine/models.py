@@ -7,11 +7,7 @@ from django.contrib.auth.models import User
 class CoffeMachine(models.Model):
 
     productName = models.CharField(max_length=100)
-    # price_without_profit = models.IntegerField()
-    # price_with_profit = models.IntegerField()
     price_with_profit = models.DecimalField(max_digits=5, decimal_places=2)
-    # profit_percent = models.IntegerField()
-    # image_itr = models.CharField(max_length=10)
 
 
     def __repr__(self):
@@ -38,17 +34,17 @@ class Order(models.Model):
         def __str__(self):
             return str(self.id)
 
-        @property
-        def get_cart_total(self):
-            orderitems = self.orderitem_set.all()
-            total = sum([item.get_total for item in orderitems])
-            return total
-
-        @property
-        def get_cart_items(self):
-            orderitems = self.orderitem_set.all()
-            total = sum([item.quantity for item in orderitems])
-            return total
+        # @property
+        # def get_cart_total(self):
+        #     orderitems = self.orderitem_set.all()
+        #     total = sum([item.get_total for item in orderitems])
+        #     return total
+        #
+        # @property
+        # def get_cart_items(self):
+        #     orderitems = self.orderitem_set.all()
+        #     total = sum([item.quantity for item in orderitems])
+        #     return total
 
 class OrderItem(models.Model):
 
@@ -58,8 +54,8 @@ class OrderItem(models.Model):
         date_added = models.DateTimeField(auto_now_add=True)
 
 
-        @property
-        def get_total(self):
-            total = self.product.price_with_profit * self.quantity
-            return total
+        # @property
+        # def get_total(self):
+        #     total = self.product.price_with_profit * self.quantity
+        #     return total
 

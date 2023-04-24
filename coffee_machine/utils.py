@@ -45,9 +45,6 @@ def cartData(request):
     order = cookieData['order']
     items = cookieData['items']
 
-    # product = int(request.body["product"])
-    # product = request.body["product"]
-    # drink = CoffeMachine.objects.get(id=product)
     cart_data = {'cartItems': cartItems, 'order': order, 'items': items}
     print(cart_data)
     return cart_data
