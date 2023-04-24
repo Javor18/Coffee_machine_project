@@ -107,19 +107,6 @@
                             } else {
                                 updateUserOrder(action, product)
                             }
-
-                            if (action === 'delete') {
-                                this.parentElement.parentElement.parentElement.remove();
-                            }
-
-                            if (action === 'plus') {
-                                this.parentElement.parentElement.previousElementSibling.innerHTML = parseInt(this.parentElement.parentElement.previousElementSibling.innerHTML) + 1;
-                            }
-
-                            if (action === 'remove') {
-                                this.parentElement.parentElement.previousElementSibling.innerHTML = parseInt(this.parentElement.parentElement.previousElementSibling.innerHTML) - 1;
-                            }
-
                     }
 
                     function updateUserOrder(action, product) {

@@ -85,15 +85,17 @@ def drinks(request, name):
 @csrf_exempt
 def updateItem(request):
 
-    # print(request.POST)
-    data = cartData(request)
-    print(data)
+    data = json.loads(request.body)
+    all_data = cartData(request)
 
-    drink = data['items'][0]['product']['name']
-    action = data.get("action")
-    quantity = data['items'][0]['quantity']
-    drink = CoffeMachine.objects.get(productName=drink)
-    # drink_id = drink.id
+    print(data)
+    print(all_data)
+
+    action = data['action']
+    quantity = all_data['order']['get_cart_items']
+    drink_id = int(data['product'])
+
+    drink = CoffeMachine.objects.get(id=drink_id)
 
     print('Action:', action)
     print('Product:', drink)
@@ -112,13 +114,13 @@ def updateItem(request):
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + int(quantity))
 
-    elif action == 'remove':
+    if action == 'remove':
         orderItem.quantity = (orderItem.quantity - 1)
 
-    elif action == 'plus':
+    if action == 'plus':
         orderItem.quantity = (orderItem.quantity + 1)
 
-    elif action == 'delete':
+    if action == 'delete':
         orderItem.quantity = 0
 
     orderItem.save()
@@ -126,8 +128,8 @@ def updateItem(request):
     if orderItem.quantity <= 0:
         orderItem.delete()
 
-    # if OrderItem.objects.filter(order=order).count() == 0:
-    #     order.delete()
+    if OrderItem.objects.filter(order=order).count() == 0:
+        order.delete()
 
     return JsonResponse({"message": "ok"})
 
