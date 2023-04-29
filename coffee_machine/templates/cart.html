@@ -72,7 +72,8 @@
 					</div>
                     <div style="flex:1"><p>${{item.get_total|floatformat:2}}</p></div>
                  <div style="flex:1">
-                        <button id="trash" data-item="{{item.product.id}}" data-quantity="{{item.quantity}}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
+{#                        <button id="trash" data-item="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="delete"><i class="fa-solid fa-trash"></i></button>#}
+                        <button id="trash" data-item="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
                     </div>
 				</div>
                 {% endfor %}
@@ -103,6 +104,30 @@
                                 updateUserOrder(action, product)
                             } else {
                                 updateUserOrder(action, product)
+                            }
+
+                            if (action === 'delete') {
+                                let item = this.dataset.item;
+                                dataset.quantity = parseInt(quantity) + 1;
+                                order_item = OrderItem.objects.get(id=item);
+                                order_item.quantity = quantity;
+                            }
+
+                            if (action === 'plus') {
+
+                                let item = this.dataset.item;
+
+                                dataset.quantity = parseInt(quantity) + 1;
+                                order_item = OrderItem.objects.get(id=item);
+                                order_item.quantity = quantity;
+
+                            }
+
+                            if (action === 'remove') {
+                                let item = this.dataset.item;
+                                dataset.quantity = parseInt(quantity) + 1;
+                                order_item = OrderItem.objects.get(id=item);
+                                order_item.quantity = quantity;
                             }
                     }
 

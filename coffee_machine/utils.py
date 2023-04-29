@@ -39,7 +39,6 @@ def cookieCart(request):
 
 def cartData(request):
 
-    print(request.body)
     cookieData = cookieCart(request)
     cartItems = cookieData['cartItems']
     order = cookieData['order']

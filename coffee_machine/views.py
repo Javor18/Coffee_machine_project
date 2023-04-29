@@ -116,7 +116,6 @@ def updateItem(request):
 
     if action == 'plus':
         orderItem.quantity = (orderItem.quantity + 1)
-        print(orderItem.quantity)
 
     if action == 'delete':
         orderItem.quantity = 0
