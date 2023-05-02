@@ -113,7 +113,7 @@ def updateItem(request):
 
     customer = request.COOKIES.get('customer_id')
 
-    # order, created = Order.objects.get_or_create(customer_id=customer, complete=False)
+    order, created = Order.objects.get(customer=customer, complete=False)
 
     orderItem, created = OrderItem.objects.get(order=order, product_id=drink_id)
     print(orderItem.__dict__)
