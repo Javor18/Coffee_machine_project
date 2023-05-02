@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -12,6 +13,10 @@ from .utils import cookieCart, cartData, get_random_string
 # Create your views here.
 
 def main(request):
+
+    username = get_random_string(10)
+    customer = User.objects.create_user(username, "password", f"{username}@add.com")
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
     data = cartData(request)
     print(data)
@@ -42,8 +47,13 @@ def main(request):
     #     cartItems = order['get_cart_items']
 
     drinks = CoffeMachine.objects.all()
-    context = {'drinks': drinks, 'cartItems': cartItems}
-    return render(request, 'main.html', context)
+    context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
+    response = render(request, 'main.html', context)
+    response.set_cookie('customer_id', customer.id)
+    response.set_cookie('order_id', order)
+
+
+    return response
 
 
 def drinks(request, name):
@@ -89,7 +99,7 @@ def updateItem(request):
     all_data = cartData(request)
 
     print(data)
-    print(all_data)
+    # print(all_data)
 
     action = data['action']
     quantity = all_data['order']['get_cart_items']
@@ -101,26 +111,28 @@ def updateItem(request):
     print('Product:', drink)
     print('Quantity:', quantity)
 
-    if request.user.is_anonymous:
-        username = get_random_string(10)
-        customer = User.objects.create_user(username, "password", f"{username}@add.com")
-    else:
-        customer = request.user
+    customer = request.COOKIES.get('customer_id')
 
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    # order, created = Order.objects.get_or_create(customer_id=customer, complete=False)
 
-    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
+    orderItem, created = OrderItem.objects.get(order=order, product_id=drink_id)
+    print(orderItem.__dict__)
+
+    print(orderItem.quantity)
 
     if action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
+        # orderItem.quantity = (orderItem.quantity - 1)
+        orderItem.quantity -= 1
 
     if action == 'plus':
-        orderItem.quantity = (orderItem.quantity + 1)
+        # orderItem.quantity = (orderItem.quantity + 1)
+        orderItem.quantity += 1
 
     if action == 'delete':
-        orderItem.quantity = 0
+        orderItem.delete()
 
     orderItem.save()
+    print(action, orderItem.quantity)
 
     if orderItem.quantity <= 0:
         orderItem.delete()
@@ -139,6 +151,7 @@ def cart(request):
     else:
         try:
             cart = json.loads(request.COOKIES['cart'])
+            # Order.objects.get(id=customer_id)
         except:
             cart = {}
         print('Cart:', cart)

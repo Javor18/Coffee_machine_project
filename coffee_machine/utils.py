@@ -8,6 +8,7 @@ from .models import *
 def cookieCart(request):
     try:
         cart = json.loads(request.COOKIES['cart'])
+        print('cookie cart')
     except:
         cart = {}
     print('Cart:', cart)
