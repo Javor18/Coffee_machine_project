@@ -16,74 +16,32 @@ def main(request):
 
     username = get_random_string(10)
     customer = User.objects.create_user(username, "password", f"{username}@add.com")
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    customer.save()
+
+    if not request.COOKIES.get('order_id'):
+        order = Order.objects.create(customer=customer, complete=False)
+        order.save()
+        created = True
+    else:
+        order = Order.objects.get(id=request.COOKIES.get('order_id'))
+        created = False
 
     data = cartData(request)
-    print(data)
-
-    # if request.user.is_authenticated:
-
-    # customer = request.user.customer
-
-    # order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
-    order = data['order']
-
-    # created = data['created']
-    # items = order.orderitem_set.all()
-
-    items = data['items']
-
-    # cartItems = order.get_cart_items
-
     cartItems = data['cartItems']
 
-    # else:
-    #
-    #     # Create empty cart for now for non-logged in user
-    #
-    #     items = []
-    #     order = {'get_cart_total': 0, 'get_cart_items': 0}
-    #     cartItems = order['get_cart_items']
-
     drinks = CoffeMachine.objects.all()
+    items = data['items']
+
     context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
     response = render(request, 'main.html', context)
     response.set_cookie('customer_id', customer.id)
     response.set_cookie('order_id', order)
-
 
     return response
 
 
 def drinks(request, name):
 
-    data = cartData(request)
-
-    # if request.user.is_authenticated:
-
-    # customer = request.user.customer
-    # order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
-    order = data['order']
-
-    # items = order.orderitem_set.all()
-
-    items = data['items']
-
-    # cartItems = order.get_cart_items
-
-    cartItems = data['cartItems']
-
-    # else:
-    #
-    #     # Create empty cart for now for non-logged in user
-    #
-    #     items = []
-    #     order = {'get_cart_total': 0, 'get_cart_items': 0}
-    #     cartItems = order['get_cart_items']
-
-    # drink = CoffeMachine.objects.get(productName=name)
     drink = CoffeMachine.objects.get(productName=name)
     price = drink.price_with_profit
     name = drink.productName
@@ -113,7 +71,9 @@ def updateItem(request):
 
     customer = request.COOKIES.get('customer_id')
 
-    order, created = Order.objects.get(customer=customer, complete=False)
+    order = Order.objects.get(customer=customer, complete=False)
+    print(order.__dict__)
+
 
     orderItem, created = OrderItem.objects.get(order=order, product_id=drink_id)
     print(orderItem.__dict__)
@@ -151,7 +111,6 @@ def cart(request):
     else:
         try:
             cart = json.loads(request.COOKIES['cart'])
-            # Order.objects.get(id=customer_id)
         except:
             cart = {}
         print('Cart:', cart)
