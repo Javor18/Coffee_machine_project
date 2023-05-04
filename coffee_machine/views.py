@@ -86,15 +86,18 @@ def updateItem(request):
     print(orderItem.quantity)
 
     if action == 'remove':
-        # orderItem.quantity = (orderItem.quantity - 1)
-        orderItem.quantity -= 1
+        orderItem.quantity = (orderItem.quantity - 1)
 
     if action == 'plus':
-        # orderItem.quantity = (orderItem.quantity + 1)
-        orderItem.quantity += 1
+        orderItem.quantity = (orderItem.quantity + 1)
 
     if action == 'delete':
         orderItem.delete()
+
+    cart = json.loads(request.COOKIES['cart'])
+    drink_id = str(drink_id)
+    cart[drink_id]['quantity'] = orderItem.quantity
+
 
     orderItem.save()
     print(action, orderItem.quantity)
