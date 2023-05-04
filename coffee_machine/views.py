@@ -34,8 +34,10 @@ def main(request):
 
     context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
     response = render(request, 'main.html', context)
-    response.set_cookie('customer_id', customer.id)
-    response.set_cookie('order_id', order)
+
+    if not request.COOKIES.get('customer_id') and not request.COOKIES.get('order_id'):
+        response.set_cookie('customer_id', customer.id)
+        response.set_cookie('order_id', order.id)
 
     return response
 
@@ -70,12 +72,15 @@ def updateItem(request):
     print('Quantity:', quantity)
 
     customer = request.COOKIES.get('customer_id')
+    order_id = request.COOKIES.get('order_id')
+    order = Order.objects.get(id=order_id)
 
-    order = Order.objects.get(customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink, quantity=quantity)
+    order = Order.objects.get(id=request.COOKIES.get('order_id'))
     print(order.__dict__)
 
 
-    orderItem, created = OrderItem.objects.get(order=order, product_id=drink_id)
+    # orderItem, created = OrderItem.objects.get(order=order, product_id=drink_id)
     print(orderItem.__dict__)
 
     print(orderItem.quantity)
@@ -102,11 +107,20 @@ def updateItem(request):
 
 def cart(request):
 
-    if request.user.is_authenticated:
-        customer = request.user
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
+    # if request.user.is_authenticated:
+    #     customer = request.user
+    #     order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    #     items = order.orderitem_set.all()
+    #     cartItems = order['get_cart_items']
+
+    customer = request.COOKIES.get('customer_id')
+    order_id = request.COOKIES.get('order_id')
+
+    if not request.COOKIES.get('order_id'):
+        order = Order.objects.create(customer=customer, complete=False)
+        order.save()
+        created = True
+
 
     else:
         try:
