@@ -74,7 +74,7 @@ def updateItem(request):
     print('Product:', drink)
     print('Quantity:', quantity)
 
-    customer = request.COOKIES.get('customer_id')
+    # customer = request.COOKIES.get('customer_id')
     order_id = request.COOKIES.get('order_id')
 
 
@@ -82,6 +82,7 @@ def updateItem(request):
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
     print(orderItem.id, created)
+    print(orderItem.__dict__)
 
     if action == 'remove':
         orderItem.quantity = (orderItem.quantity - 1)
@@ -97,6 +98,9 @@ def updateItem(request):
     cart = json.loads(request.COOKIES['cart'])
     drink_id = str(drink_id)
     cart[drink_id]['quantity'] = orderItem.quantity
+    request.COOKIES['cart'] = json.dumps(cart)
+
+    print(cart)
 
     orderItem.save()
 
@@ -105,26 +109,37 @@ def updateItem(request):
     return JsonResponse({"message": "ok"})
 
 
+# def cart(request):
+#
+#     order_id = request.COOKIES.get('order_id')
+#     order = Order.objects.get(id=order_id)
+#     # items = Order.objects.get(id=order_id).orderitem_set.all()
+#     items = cartData(request)['items']
+#     cartItems = {}
+#
+#     for item in items:
+#         cartItems[item.product.id] = {
+#             'quantity': item.quantity,
+#             'price': item.product.price_with_profit,
+#             'name': item.product.productName,
+#             'total_price': item.get_total,
+#         }
+#
+#     data = cartData(request)
+#     cartItems = data['cartItems']
+#
+#
+#     context = {'items': items, 'order': order, 'cartItems': cartItems}
+#     return render(request, 'cart.html', context)
+
+
 def cart(request):
-
-    order_id = request.COOKIES.get('order_id')
-    order = Order.objects.get(id=order_id)
-    items = Order.objects.get(id=order_id).orderitem_set.all()
-
-    cartItems = {}
-
-    for item in items:
-        cartItems[item.product.id] = {
-            'product': item.product.productName,
-            'quantity': item.quantity,
-            'price': item.product.price_with_profit,
-            'get_total': item.get_total,
-        }
 
     data = cartData(request)
     cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
-
