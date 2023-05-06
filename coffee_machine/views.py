@@ -36,7 +36,6 @@ def main(request):
     response = render(request, 'main.html', context)
 
     if not request.COOKIES.get('order_id'):
-        # response.set_cookie('customer_id', customer.id)
         response.set_cookie('order_id', order.id)
 
     return response
@@ -64,7 +63,6 @@ def updateItem(request):
     all_data = cartData(request)
 
     print(data)
-    # print(all_data)
 
     action = data['action']
     quantity = all_data['order']['get_cart_items']
@@ -108,12 +106,6 @@ def updateItem(request):
 
 
 def cart(request):
-
-    # if request.user.is_authenticated:
-    #     customer = request.user
-    #     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    #     items = order.orderitem_set.all()
-    #     cartItems = order['get_cart_items']
 
     order_id = request.COOKIES.get('order_id')
     order = Order.objects.get(id=order_id)
