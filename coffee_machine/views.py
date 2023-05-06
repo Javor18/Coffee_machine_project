@@ -14,12 +14,12 @@ from .utils import cookieCart, cartData, get_random_string
 
 def main(request):
 
-    username = get_random_string(10)
-    customer = User.objects.create_user(username, "password", f"{username}@add.com")
-    customer.save()
+    # username = get_random_string(10)
+    # customer = User.objects.create_user(username, "password", f"{username}@add.com")
+    # customer.save()
 
     if not request.COOKIES.get('order_id'):
-        order = Order.objects.create(customer=customer, complete=False)
+        order = Order.objects.create(complete=False)
         order.save()
         created = True
     else:
@@ -32,7 +32,7 @@ def main(request):
     drinks = CoffeMachine.objects.all()
     items = data['items']
 
-    context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
+    context = {'drinks': drinks, 'cartItems': cartItems, 'order': order, 'items': items, 'created': created}
     response = render(request, 'main.html', context)
 
     if not request.COOKIES.get('order_id'):
@@ -112,6 +112,18 @@ def cart(request):
     items = Order.objects.get(id=order_id).orderitem_set.all()
 
     cartItems = {}
+
+    for item in items:
+        cartItems[item.product.id] = {
+            'product': item.product.productName,
+            'quantity': item.quantity,
+            'price': item.product.price_with_profit,
+            'get_total': item.get_total,
+        }
+
+    data = cartData(request)
+    cartItems = data['cartItems']
+
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
