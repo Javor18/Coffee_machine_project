@@ -35,8 +35,8 @@ def main(request):
     context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
     response = render(request, 'main.html', context)
 
-    if not request.COOKIES.get('customer_id') and not request.COOKIES.get('order_id'):
-        response.set_cookie('customer_id', customer.id)
+    if not request.COOKIES.get('order_id'):
+        # response.set_cookie('customer_id', customer.id)
         response.set_cookie('order_id', order.id)
 
     return response
@@ -47,6 +47,11 @@ def drinks(request, name):
     drink = CoffeMachine.objects.get(productName=name)
     price = drink.price_with_profit
     name = drink.productName
+
+    if request.POST:
+        order_id = request.COOKIES["order_id"]
+        order_item, created = OrderItem.objects.get_or_create(order_id=order_id, product=drink)
+
     context = {'price': price, 'name': name, 'drink': drink}
     return render(request, 'drinks_info.html', context)
 
@@ -73,20 +78,17 @@ def updateItem(request):
 
     customer = request.COOKIES.get('customer_id')
     order_id = request.COOKIES.get('order_id')
-    order = Order.objects.get(id=order_id)
 
-    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink, quantity=quantity)
+
     order = Order.objects.get(id=request.COOKIES.get('order_id'))
-    print(order.__dict__)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
-
-    # orderItem, created = OrderItem.objects.get(order=order, product_id=drink_id)
-    print(orderItem.__dict__)
-
-    print(orderItem.quantity)
+    print(orderItem.id, created)
 
     if action == 'remove':
         orderItem.quantity = (orderItem.quantity - 1)
+        if orderItem.quantity <= 0:
+            orderItem.delete()
 
     if action == 'plus':
         orderItem.quantity = (orderItem.quantity + 1)
@@ -98,12 +100,9 @@ def updateItem(request):
     drink_id = str(drink_id)
     cart[drink_id]['quantity'] = orderItem.quantity
 
-
     orderItem.save()
-    print(action, orderItem.quantity)
 
-    if orderItem.quantity <= 0:
-        orderItem.delete()
+    print(action, orderItem.quantity)
 
     return JsonResponse({"message": "ok"})
 
@@ -116,44 +115,11 @@ def cart(request):
     #     items = order.orderitem_set.all()
     #     cartItems = order['get_cart_items']
 
-    customer = request.COOKIES.get('customer_id')
     order_id = request.COOKIES.get('order_id')
+    order = Order.objects.get(id=order_id)
+    items = Order.objects.get(id=order_id).orderitem_set.all()
 
-    if not request.COOKIES.get('order_id'):
-        order = Order.objects.create(customer=customer, complete=False)
-        order.save()
-        created = True
-
-
-    else:
-        try:
-            cart = json.loads(request.COOKIES['cart'])
-        except:
-            cart = {}
-        print('Cart:', cart)
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
-
-        for i in cart:
-            try:
-                cartItems += cart[i]['quantity']
-                drink = CoffeMachine.objects.get(id=i)
-                total = (drink.price_with_profit * cart[i]['quantity'])
-                order['get_cart_total'] += total
-                order['get_cart_items'] += cart[i]['quantity']
-                item = {
-                    'product': {
-                        'id': drink.id,
-                        'name': drink.productName,
-                        'price': drink.price_with_profit,
-                    },
-                    'quantity': cart[i]['quantity'],
-                    'get_total': total,
-                }
-                items.append(item)
-            except:
-                pass
+    cartItems = {}
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
