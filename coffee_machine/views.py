@@ -68,7 +68,9 @@ def updateItem(request):
 
     action = data['action']
     quantity = all_data['order']['get_cart_items']
-    drink_id = int(data['product'])
+    drink_id = int(data['productId'])
+    print("Drink id -----------")
+    print(drink_id)
 
     drink = CoffeMachine.objects.get(id=drink_id)
 
@@ -82,6 +84,8 @@ def updateItem(request):
 
     order = Order.objects.get(id=request.COOKIES.get('order_id'))
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
+
+    print(action)
 
     print(orderItem.id, created)
 
@@ -97,8 +101,10 @@ def updateItem(request):
         orderItem.delete()
 
     cart = json.loads(request.COOKIES['cart'])
-    drink_id = str(drink_id)
-    cart[drink_id]['quantity'] = orderItem.quantity
+    # drink_id = str(drink_id)
+    # import pdb;pdb.set_trace()
+    # cart[drink_id]['quantity'] = orderItem.quantity
+
 
     orderItem.save()
 
