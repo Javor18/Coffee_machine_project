@@ -61,13 +61,14 @@ def drinks(request, name):
 def updateItem(request):
 
     data = json.loads(request.body)
-    all_data = cartData(request)
+    # all_data = cartData(request)
 
     print(data)
     # print(all_data)
 
     action = data['action']
-    quantity = all_data['order']['get_cart_items']
+    # quantity = all_data['order']['get_cart_items']
+    quantity = data['quantity']
     drink_id = int(data['productId'])
     print("Drink id -----------")
     print(drink_id)
@@ -81,7 +82,6 @@ def updateItem(request):
     customer = request.COOKIES.get('customer_id')
     order_id = request.COOKIES.get('order_id')
 
-
     order = Order.objects.get(id=request.COOKIES.get('order_id'))
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
@@ -89,20 +89,17 @@ def updateItem(request):
 
     print(orderItem.id, created)
 
+    orderItem.quantity += int(quantity)
+
     if action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
         if orderItem.quantity <= 0:
             orderItem.delete()
-
-    if action == 'plus':
-        orderItem.quantity = (orderItem.quantity + 1)
 
     if action == 'delete':
         orderItem.delete()
 
-    cart = json.loads(request.COOKIES['cart'])
+    # cart = json.loads(request.COOKIES['cart'])
     # drink_id = str(drink_id)
-    # import pdb;pdb.set_trace()
     # cart[drink_id]['quantity'] = orderItem.quantity
 
 
