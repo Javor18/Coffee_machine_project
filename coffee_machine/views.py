@@ -66,7 +66,6 @@ def updateItem(request):
     print("Drink id -----------")
     print(drink_id)
     total_price = 0
-    total_items = 0
 
     drink = CoffeMachine.objects.get(id=drink_id)
 
@@ -98,13 +97,6 @@ def updateItem(request):
 
     print(action, orderItem.quantity)
 
-    for item in order.orderitem_set.all():
-        print(item.product.productName, item.quantity)
-        # total_price += item.price_with_profit * item.quantity
-        total_items += item.quantity
-
-    print(total_price, total_items)
-
     return JsonResponse({"message": "ok"})
 
 
@@ -114,10 +106,19 @@ def cart(request):
     order_id = request.COOKIES.get('order_id')
     order = Order.objects.get(id=order_id)
     items = Order.objects.get(id=order_id).orderitem_set.all()
+    total_items = 0
+    total_price = 0
 
     print(items)
     print(order)
 
-    context = {'items': items, 'order': order}
+    for item in order.orderitem_set.all():
+        print(item.product.productName, item.quantity)
+        total_price += item.get_total
+        total_items += item.quantity
+
+    print(total_price, total_items)
+
+    context = {'items': items, 'order': order, 'total_items': total_items, 'total_price': total_price}
     return render(request, 'cart.html', context)
 
