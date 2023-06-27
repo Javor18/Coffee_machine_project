@@ -65,6 +65,8 @@ def updateItem(request):
     drink_id = int(data['productId'])
     print("Drink id -----------")
     print(drink_id)
+    total_price = 0
+    total_items = 0
 
     drink = CoffeMachine.objects.get(id=drink_id)
 
@@ -95,6 +97,13 @@ def updateItem(request):
         orderItem.save()
 
     print(action, orderItem.quantity)
+
+    for item in order.orderitem_set.all():
+        print(item.product.productName, item.quantity)
+        # total_price += item.price_with_profit * item.quantity
+        total_items += item.quantity
+
+    print(total_price, total_items)
 
     return JsonResponse({"message": "ok"})
 
