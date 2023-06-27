@@ -60,21 +60,20 @@
                     <div style="flex:2"><p>{{item.product.productName}}</p></div>
                     <div style="flex:1"><p>$ {{item.product.price_with_profit|floatformat:2}}</p></div>
 					<div style="flex:1">
-{#						<p class="quantity">x{{item.quantity}}</p>#}
                         <p class="quantity">{{item.quantity}}</p>
 						<div class="quantity">
 
                             <div class="chg-quantity">
-                                <button class="arrow-up" data-product="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="plus"><i class="fa-solid fa-arrow-up"></i></button>
-                                <button class="arrow-down" data-product="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="remove"><i class="fa-solid fa-arrow-down"></i></button>
+                                <button class="arrow-up" data-product="{{ item.product.id }}" data-quantity="{{ item.quantity }}" data-action="plus"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button class="arrow-down" data-product="{{ item.product.id }}" data-quantity="{{ item.quantity }}" data-action="remove"><i class="fa-solid fa-arrow-down"></i></button>
                             </div>
 						</div>
 					</div>
                     <div style="flex:1"><p>${{item.get_total|floatformat:2}}</p></div>
                  <div style="flex:1">
-{#                        <button id="trash" data-item="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="delete"><i class="fa-solid fa-trash"></i></button>#}
-                        <button class="trash" data-product="{{ item.product.id }}" data-quantity="{{ item.product.quantity }}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+                          <button class="trash" data-product="{{ item.product.id }}" data-action="delete"><i class="fa-solid fa-trash"></i></button>
+
+                 </div>
 				</div>
                 {% endfor %}
             </div>
@@ -98,26 +97,25 @@
                             let action = this.dataset.action;
                             let product = this.dataset.product;
                             {#let all_quantity = 0#}
-                            let quantity = this.dataset.quantity;
+                            let quantity = parseInt(this.dataset.quantity);
 
                             {#all_quantity += quantity#}
 
-                            if(action == "add"){
+                            if(action == "plus"){
                                 quantity += 1;
-                            }else if(action == "remove"){
-                                quantity -= 1
+                            }else if(action == "remove") {
+                                if (quantity > 0){
+                                    quantity -= 1;
+                                }else if (quantity === 0) {
+                                    alert("Quantity is only greater or equal to zero");
+                                }
                             }
 
                             console.log('action:', action);
                             console.log('product:', product);
                             console.log('quantity', quantity);
 
-                            if (user === 'AnonymousUser') {
-                                updateUserOrder(action, product, quantity)
-                            } else {
-                                updateUserOrder(action, product, quantity)
-                            }
-
+                            updateUserOrder(action, product, quantity)
                     }
 
                     function updateUserOrder(action, product, quantity) {
@@ -129,7 +127,6 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRFToken': csrftoken,
                             },
                             body: JSON.stringify({'action': action, 'productId': product, 'quantity': quantity})
                         })
@@ -145,39 +142,26 @@
                         });
                     }
 
-
-                    let csrftoken = getToken('csrftoken')
-             function getToken(name) {
-                 var cookieValue = null;
-                 if (document.cookie && document.cookie !== '') {
-                     var cookies = document.cookie.split(';');
-
-                     for (var i = 0; i < cookies.length; i++) {
-
-                         var cookie = cookies[i].trim();
-
-                         if (cookie.substring(0, name.length + 1) === (name + '=')) {
-
-                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-
-                             break;
-                         }
-                     }
-                 }
-                 return cookieValue;
-             }
-             {#let csrftoken = getToken('csrftoken')#}
-
-
                      </script>
 
 
     <script type="text/javascript">
 
+            function deleteOrder(){
+                document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+        }
+
          const showImageBtn = document.getElementById('show-img-btn');
          const imageOverlay = document.getElementById('img-overlay');
          const imageOverlay1 = document.getElementById('img-overlay-1')
          const LoadDots = document.getElementById('loading-dots')
+         const current_url = "{{ request.get_host }}";
+
+         console.log(window.location.protocol);
+
+         var url = window.location.protocol + "//" + current_url;
+
+        console.log(current_url);
 
         showImageBtn.addEventListener('click', function() {
             imageOverlay.style.display = 'block';
@@ -196,7 +180,10 @@
         })
 
          imageOverlay1.addEventListener('click', function (){
+             deleteOrder();
              imageOverlay1.style.display = 'none'
+             console.log(window.location.href);
+             window.location.replace(url);
          })
 
         setTimeout(function() {
@@ -204,6 +191,7 @@
             image.setAttribute('src', '{% static 'images/checked.png' %}');
             image.setAttribute('alt', 'New Image');
     }, 5000); // Replace the image after 5 seconds (5000 milliseconds)
+
 
          </script>
 {% endblock content %}

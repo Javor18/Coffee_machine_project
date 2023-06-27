@@ -141,12 +141,14 @@
         let customer_id = {{ customer }}
 
         plusBtn.addEventListener('click', function () {
+            console.log('plus');
             quantityValue++;
             quantity.value = quantityValue;
             total.value = ({{ price }} * quantityValue).toFixed(2);
         });
 
         minusBtn.addEventListener('click', function () {
+            console.log('minus');
             if (quantityValue > 1) {
                 quantityValue--;
                 quantity.value = quantityValue;
@@ -154,50 +156,13 @@
             }
         });
 
-        quantity.addEventListener('change', function () {
+        quantity.addEventListener('change', function (){
+            console.log('quantity');
             total.value = ({{price}} * quantity.value).toFixed(2);
         });
 
         total.value = ({{price}} * quantityValue).toFixed(2);
     </script>
-
-
-{#         ///////////////// Get cookie value //////////////////#}
-
-
-         <script type="text/javascript">
-
-
-         function getCookie(name) {
-
-             var cookieArr = document.cookie.split(";");
-
-             for(var i = 0; i < cookieArr.length; i++) {
-
-                 var cookiePair = cookieArr[i].split("=");
-
-                 if(name == cookiePair[0].trim()) {
-
-                     return decodeURIComponent(cookiePair[1]);
-                 }
-             }
-
-             return null;
-            }
-
-         var cart = JSON.parse(getCookie('cart'));
-
-         if (cart == undefined){
-             cart = {}
-             console.log('Cart created!', cart)
-             document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
-         }
-
-         console.log('Cart:', cart)
-
-         </script>
-
-
 
 {#///////////// Add to cart /////////////#}
 
@@ -212,21 +177,15 @@
             for (let i = 0; i < updateBtns.length; i++) {
 
                 updateBtns[i].addEventListener('click', function (){
+                    console.log('update btns')
                     let productId = this.dataset.product
                     let action = this.dataset.action
                     let quantity = document.getElementById('quantity').value
                     console.log('productId:', productId, 'Action:', action, 'Quantity:', quantity)
 
-
                     console.log('User:', user)
 
-                    if (user == 'AnonymousUser'){
-                        {#updateUserOrder(productId, action, quantity)#}
-                        addCookieItem(productId, action, quantity)
-                    }else{
-                        {#updateUserOrder(productId, action, quantity)#}
-                        updateUserOrder(productId, action, quantity)
-                    }
+                    updateUserOrder(productId, action, quantity)
                 })
             }
 
@@ -241,7 +200,6 @@
                         method:'POST',
                         headers:{
                             'Content-Type':'application/json',
-                            'X-CSRFToken':csrftoken,
                         },
                         body:JSON.stringify({'productId':productId, 'action':action, 'quantity': quantity})
                     })
@@ -253,61 +211,8 @@
                         });
                 }
 
-            function addCookieItem(productId, action, quantity){
-                console.log('User is not authenticated')
-
-                if (action == 'add'){
-                    if (cart[productId] == undefined){
-                        cart[productId] = {'quantity': parseInt(quantity)}
-
-                    }else{
-                        cart[productId]['quantity'] += parseInt(quantity)
-                    }
-                }
-
-                if (action == 'remove'){
-                    cart[productId]['quantity'] -= 1
-
-                    if (cart[productId]['quantity'] <= 0){
-
-                        console.log('Item should be deleted')
-
-                        delete cart[productId];
-                    }
-                }
-                console.log('CART:', cart)
-
-                document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
 
 
-                location.reload()
-
-            }
-
-
-{#         ///////////////// CSRF Token ////////////////#}
-
-            let csrftoken = getToken('csrftoken')
-             function getToken(name) {
-                 var cookieValue = null;
-                 if (document.cookie && document.cookie !== '') {
-                     var cookies = document.cookie.split(';');
-
-                     for (var i = 0; i < cookies.length; i++) {
-
-                         var cookie = cookies[i].trim();
-
-                         if (cookie.substring(0, name.length + 1) === (name + '=')) {
-
-                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-
-                             break;
-                         }
-                     }
-                 }
-                 return cookieValue;
-             }
-             {#let csrftoken = getToken('csrftoken')#}
 
          </script>
 
