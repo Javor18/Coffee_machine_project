@@ -8,7 +8,7 @@ import datetime
 
 from .models import *
 from .utils import cookieCart, cartData, get_random_string
-
+# from .utils import cookieCart, cartData, guestOrder
 
 # Create your views here.
 
@@ -26,12 +26,17 @@ def main(request):
         order = Order.objects.get(id=request.COOKIES.get('order_id'))
         created = False
 
-    drinks = CoffeMachine.objects.all()
+    data = cartData(request)
+    cartItems = data['cartItems']
 
-    context = {'drinks': drinks, 'customer': customer.id, 'order': order, 'created': created}
+    drinks = CoffeMachine.objects.all()
+    items = data['items']
+
+    context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
     response = render(request, 'main.html', context)
 
     if not request.COOKIES.get('order_id'):
+        # response.set_cookie('customer_id', customer.id)
         response.set_cookie('order_id', order.id)
 
     return response
@@ -55,17 +60,17 @@ def drinks(request, name):
 @csrf_exempt
 def updateItem(request):
 
-    print("update item calls")
-
     data = json.loads(request.body)
+    all_data = cartData(request)
+
     print(data)
+    # print(all_data)
 
     action = data['action']
-    quantity = data['quantity']
+    quantity = all_data['order']['get_cart_items']
     drink_id = int(data['productId'])
     print("Drink id -----------")
     print(drink_id)
-    total_price = 0
 
     drink = CoffeMachine.objects.get(id=drink_id)
 
@@ -73,52 +78,77 @@ def updateItem(request):
     print('Product:', drink)
     print('Quantity:', quantity)
 
+    customer = request.COOKIES.get('customer_id')
+    order_id = request.COOKIES.get('order_id')
+
+
     order = Order.objects.get(id=request.COOKIES.get('order_id'))
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
-    print(action)
-
     print(orderItem.id, created)
 
-    if quantity != None:
-        orderItem.quantity = int(quantity)
-
     if action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
         if orderItem.quantity <= 0:
             orderItem.delete()
+
+    if action == 'plus':
+        orderItem.quantity = (orderItem.quantity + 1)
 
     if action == 'delete':
         orderItem.delete()
 
-        print("delete item")
+    cart = json.loads(request.COOKIES['cart'])
+    # drink_id = str(drink_id)
+    # import pdb;pdb.set_trace()
+    # cart[drink_id]['quantity'] = orderItem.quantity
 
-    else:
-        orderItem.save()
+
+    orderItem.save()
 
     print(action, orderItem.quantity)
 
     return JsonResponse({"message": "ok"})
 
 
+# def cart(request):
+#
+#     order_id = request.COOKIES.get('order_id')
+#     order = Order.objects.get(id=order_id)
+#     # items = Order.objects.get(id=order_id).orderitem_set.all()
+#     items = cartData(request)['items']
+#     cartItems = {}
+#
+#     for item in items:
+#         cartItems[item.product.id] = {
+#             'quantity': item.quantity,
+#             'price': item.product.price_with_profit,
+#             'name': item.product.productName,
+#             'total_price': item.get_total,
+#         }
+#
+#     data = cartData(request)
+#     cartItems = data['cartItems']
+#
+#
+#     context = {'items': items, 'order': order, 'cartItems': cartItems}
+#     return render(request, 'cart.html', context)
+
+
 def cart(request):
 
+    # if request.user.is_authenticated:
+    #     customer = request.user
+    #     order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    #     items = order.orderitem_set.all()
+    #     cartItems = order['get_cart_items']
 
     order_id = request.COOKIES.get('order_id')
     order = Order.objects.get(id=order_id)
     items = Order.objects.get(id=order_id).orderitem_set.all()
-    total_items = 0
-    total_price = 0
 
-    print(items)
-    print(order)
+    cartItems = {}
 
-    for item in order.orderitem_set.all():
-        print(item.product.productName, item.quantity)
-        total_price += item.get_total
-        total_items += item.quantity
-
-    print(total_price, total_items)
-
-    context = {'items': items, 'order': order, 'total_items': total_items, 'total_price': total_price}
+    context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
 
