@@ -14,12 +14,12 @@ from .utils import cookieCart, cartData, get_random_string
 
 def main(request):
 
-    # username = get_random_string(10)
-    # customer = User.objects.create_user(username, "password", f"{username}@add.com")
-    # customer.save()
+    username = get_random_string(10)
+    customer = User.objects.create_user(username, "password", f"{username}@add.com")
+    customer.save()
 
     if not request.COOKIES.get('order_id'):
-        order = Order.objects.create(complete=False)
+        order = Order.objects.create(customer=customer, complete=False)
         order.save()
         created = True
     else:
@@ -32,10 +32,11 @@ def main(request):
     drinks = CoffeMachine.objects.all()
     items = data['items']
 
-    context = {'drinks': drinks, 'cartItems': cartItems, 'order': order, 'items': items, 'created': created}
+    context = {'drinks': drinks, 'cartItems': cartItems, 'customer': customer.id, 'order': order, 'items': items, 'created': created}
     response = render(request, 'main.html', context)
 
     if not request.COOKIES.get('order_id'):
+        # response.set_cookie('customer_id', customer.id)
         response.set_cookie('order_id', order.id)
 
     return response
@@ -63,10 +64,13 @@ def updateItem(request):
     all_data = cartData(request)
 
     print(data)
+    # print(all_data)
 
     action = data['action']
     quantity = all_data['order']['get_cart_items']
-    drink_id = int(data['product'])
+    drink_id = int(data['productId'])
+    print("Drink id -----------")
+    print(drink_id)
 
     drink = CoffeMachine.objects.get(id=drink_id)
 
@@ -74,7 +78,7 @@ def updateItem(request):
     print('Product:', drink)
     print('Quantity:', quantity)
 
-    # customer = request.COOKIES.get('customer_id')
+    customer = request.COOKIES.get('customer_id')
     order_id = request.COOKIES.get('order_id')
 
 
@@ -82,7 +86,6 @@ def updateItem(request):
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
     print(orderItem.id, created)
-    print(orderItem.__dict__)
 
     if action == 'remove':
         orderItem.quantity = (orderItem.quantity - 1)
@@ -96,11 +99,10 @@ def updateItem(request):
         orderItem.delete()
 
     cart = json.loads(request.COOKIES['cart'])
-    drink_id = str(drink_id)
-    cart[drink_id]['quantity'] = orderItem.quantity
-    request.COOKIES['cart'] = json.dumps(cart)
+    # drink_id = str(drink_id)
+    # import pdb;pdb.set_trace()
+    # cart[drink_id]['quantity'] = orderItem.quantity
 
-    print(cart)
 
     orderItem.save()
 
@@ -135,11 +137,18 @@ def updateItem(request):
 
 def cart(request):
 
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
+    # if request.user.is_authenticated:
+    #     customer = request.user
+    #     order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    #     items = order.orderitem_set.all()
+    #     cartItems = order['get_cart_items']
 
+    order_id = request.COOKIES.get('order_id')
+    order = Order.objects.get(id=order_id)
+    items = Order.objects.get(id=order_id).orderitem_set.all()
+
+    cartItems = {}
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'cart.html', context)
+
