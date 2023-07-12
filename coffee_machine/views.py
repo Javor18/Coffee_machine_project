@@ -60,6 +60,8 @@ def drinks(request, name):
 @csrf_exempt
 def updateItem(request):
 
+    print("updateItem")
+
     data = json.loads(request.body)
     # all_data = cartData(request)
 
@@ -69,6 +71,10 @@ def updateItem(request):
     action = data['action']
     # quantity = all_data['order']['get_cart_items']
     quantity = data['quantity']
+
+    print("QUANTITY")
+    print(quantity)
+
     drink_id = int(data['productId'])
     print("Drink id -----------")
     print(drink_id)
@@ -79,31 +85,24 @@ def updateItem(request):
     print('Product:', drink)
     print('Quantity:', quantity)
 
-    customer = request.COOKIES.get('customer_id')
-    order_id = request.COOKIES.get('order_id')
-
     order = Order.objects.get(id=request.COOKIES.get('order_id'))
+    print(order)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=drink)
 
     print(action)
 
     print(orderItem.id, created)
 
-    orderItem.quantity += int(quantity)
+    if action == 'delete':
+        orderItem.delete()
+
+    if action == "remove" or action == "add" or action == "plus":
+        orderItem.quantity += int(quantity)
+        orderItem.save()
 
     if action == 'remove':
         if orderItem.quantity <= 0:
             orderItem.delete()
-
-    if action == 'delete':
-        orderItem.delete()
-
-    # cart = json.loads(request.COOKIES['cart'])
-    # drink_id = str(drink_id)
-    # cart[drink_id]['quantity'] = orderItem.quantity
-
-
-    orderItem.save()
 
     print(action, orderItem.quantity)
 
