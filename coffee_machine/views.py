@@ -121,8 +121,16 @@ def cart(request):
     order = Order.objects.get(id=order_id)
     items = Order.objects.get(id=order_id).orderitem_set.all()
 
+    total_items = 0
+
+    total_price = 0
+
+    for item in items:
+        total_items += item.quantity
+        total_price += item.product.price_with_profit * item.quantity
+
     cartItems = {}
 
-    context = {'items': items, 'order': order, 'cartItems': cartItems}
+    context = {'items': items, 'order': order, 'cartItems': cartItems, 'total_items': total_items, 'total_price': total_price}
     return render(request, 'cart.html', context)
 

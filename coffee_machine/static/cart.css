@@ -140,14 +140,14 @@ h1,h2,h3,h4,h5,h6{
     margin-left: 16px;
 }
 
-#trash {
+.trash {
 	border: none;
 	background: none;
 	cursor: pointer;
 }
 
-#arrow-up,
-#arrow-down {
+.arrow-up,
+.arrow-down {
 	border: none;
 	background: none;
 	font-size: 20px;
