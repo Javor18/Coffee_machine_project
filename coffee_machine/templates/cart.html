@@ -100,27 +100,22 @@
                             {#let all_quantity = 0#}
                             let quantity = this.dataset.quantity;
 
-                            {#all_quantity += quantity#}
-
-                            if(action == "add"){
-                                quantity += 1;
+                            if(action == "plus"){
+                                console.log("Add + 1");
+                                quantity = 1;
                             }else if(action == "remove"){
-                                quantity -= 1
+                                quantity = -1;
                             }
 
                             console.log('action:', action);
                             console.log('product:', product);
                             console.log('quantity', quantity);
 
-                            if (user === 'AnonymousUser') {
-                                updateUserOrder(action, product, quantity)
-                            } else {
-                                updateUserOrder(action, product, quantity)
-                            }
-
+                            updateUserOrder(action, product, quantity);
                     }
 
                     function updateUserOrder(action, product, quantity) {
+
                         console.log('User is authenticated, sending data...');
 
                         let url = '/update_item/';
@@ -140,7 +135,6 @@
 
                         .then((data) => {
                             console.log('data:', data);
-                            {#location.update();#}
                             location.reload();
                         });
                     }
@@ -166,8 +160,6 @@
                  }
                  return cookieValue;
              }
-             {#let csrftoken = getToken('csrftoken')#}
-
 
                      </script>
 

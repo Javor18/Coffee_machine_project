@@ -168,33 +168,6 @@
          <script type="text/javascript">
 
 
-         function getCookie(name) {
-
-             var cookieArr = document.cookie.split(";");
-
-             for(var i = 0; i < cookieArr.length; i++) {
-
-                 var cookiePair = cookieArr[i].split("=");
-
-                 if(name == cookiePair[0].trim()) {
-
-                     return decodeURIComponent(cookiePair[1]);
-                 }
-             }
-
-             return null;
-            }
-
-         var cart = JSON.parse(getCookie('cart'));
-
-         if (cart == undefined){
-             cart = {}
-             console.log('Cart created!', cart)
-             document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
-         }
-
-         console.log('Cart:', cart)
-
          </script>
 
 
@@ -217,16 +190,9 @@
                     let quantity = document.getElementById('quantity').value
                     console.log('productId:', productId, 'Action:', action, 'Quantity:', quantity)
 
-
                     console.log('User:', user)
 
-                    if (user == 'AnonymousUser'){
-                        {#updateUserOrder(productId, action, quantity)#}
-                        addCookieItem(productId, action, quantity)
-                    }else{
-                        {#updateUserOrder(productId, action, quantity)#}
-                        updateUserOrder(productId, action, quantity)
-                    }
+                    updateUserOrder(productId, action, quantity)
                 })
             }
 
@@ -252,38 +218,6 @@
                             location.reload()
                         });
                 }
-
-            function addCookieItem(productId, action, quantity){
-                console.log('User is not authenticated')
-
-                if (action == 'add'){
-                    if (cart[productId] == undefined){
-                        cart[productId] = {'quantity': parseInt(quantity)}
-
-                    }else{
-                        cart[productId]['quantity'] += parseInt(quantity)
-                    }
-                }
-
-                if (action == 'remove'){
-                    cart[productId]['quantity'] -= 1
-
-                    if (cart[productId]['quantity'] <= 0){
-
-                        console.log('Item should be deleted')
-
-                        delete cart[productId];
-                    }
-                }
-                console.log('CART:', cart)
-
-                document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
-
-
-                location.reload()
-
-            }
-
 
 {#         ///////////////// CSRF Token ////////////////#}
 
