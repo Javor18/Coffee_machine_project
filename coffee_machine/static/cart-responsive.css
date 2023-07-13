@@ -138,3 +138,19 @@
     margin-right: 60px;
     }
 }
+
+@media only screen and (max-width: 1040px) {
+   .row {
+    width: 80%;
+    margin: auto;
+    margin-top: 30px;
+    }
+}
+
+@media only screen and (max-width: 1007px) {
+   .row {
+    width: 80%;
+    margin: auto;
+    margin-top: 30px;
+    }
+}

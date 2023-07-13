@@ -170,10 +170,13 @@
          const imageOverlay = document.getElementById('img-overlay');
          const imageOverlay1 = document.getElementById('img-overlay-1')
          const LoadDots = document.getElementById('loading-dots')
+         let total_items = {{ total_items }};
 
         showImageBtn.addEventListener('click', function() {
-            imageOverlay.style.display = 'block';
-            console.log('clicked')
+            if(total_items > 0){
+                imageOverlay.style.display = 'block';
+                console.log('clicked')
+            }
         });
 
         imageOverlay.addEventListener('click', function() {
